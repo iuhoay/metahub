@@ -1,0 +1,20 @@
+= link_to 'Connect Database', new_database_path, class: 'btn btn-primary'
+
+table.table
+  thead
+    tr
+      th Name
+      th Description
+      th URL
+      th Kind
+      th
+      th
+  tbody
+    - @databases.each do |database|
+      tr
+        td = database.name
+        td = database.description
+        td = database.url
+        td = database.kind
+        td = link_to 'Edit', edit_database_path(database)
+        td = link_to 'Delete', database_path(database), method: :delete, data: { confirm: 'Are you sure?' }
