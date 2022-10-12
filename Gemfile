@@ -70,3 +70,8 @@ group :test do
   gem "selenium-webdriver"
   gem "webdrivers"
 end
+
+gem 'bootstrap'
+gem 'jquery-rails'
+gem 'simple_form'
+gem 'slim-rails'

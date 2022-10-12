@@ -1,0 +1,11 @@
+= simple_form_for @database do |f|
+  .mb-2
+    = f.input :name
+  .mb-2
+    = f.input :description
+  .mb-2
+    = f.input :url
+  .mb-2
+    = f.input :kind
+  .mb-2
+    = f.submit 'Save', class: 'btn btn-primary'
