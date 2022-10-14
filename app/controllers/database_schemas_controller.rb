@@ -3,7 +3,7 @@ class DatabaseSchemasController < ApplicationController
 
   def sync_tables
     @database_schema.sync_tables
-    redirect_to @database_schema.database, notice: 'Database schema was successfully synced.'
+    redirect_to [@database_schema.database, @database_schema], notice: 'Database schema was successfully synced.'
   end
 
   private
