@@ -1,5 +1,7 @@
 = simple_form_for @database do |f|
   .mb-2
+    = f.input :kind
+  .mb-2
     = f.input :name
   .mb-2
     = f.input :description
@@ -8,6 +10,8 @@
   .mb-2
     = f.input :port
   .mb-2
-    = f.input :kind
+    = f.input :username
+  .mb-2
+    = f.input :password
   .mb-2
     = f.submit 'Save', class: 'btn btn-primary'
