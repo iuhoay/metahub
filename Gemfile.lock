@@ -136,6 +136,7 @@ GEM
     nio4r (2.5.8)
     nokogiri (1.13.8-x86_64-linux)
       racc (~> 1.4)
+    pg (1.4.4)
     popper_js (2.11.6)
     public_suffix (5.0.0)
     puma (5.6.5)
@@ -248,8 +249,9 @@ DEPENDENCIES
   jbuilder
   jquery-rails
   mysql2 (~> 0.5)
+  pg (~> 1.1)
   puma (~> 5.0)
-  rails (~> 7.0.3, >= 7.0.3.1)
+  rails (~> 7.0.4)
   redis (~> 4.0)
   selenium-webdriver
   simple_form
