@@ -10,5 +10,6 @@ class DatabaseSchemasController < ApplicationController
 
   def set_database_schema
     @database_schema = DatabaseSchema.find(params[:id])
+    @database = @database_schema.database
   end
 end
