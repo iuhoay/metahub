@@ -11,7 +11,10 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.0].define(version: 2022_10_14_045257) do
-  create_table "connect_databases", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "connect_databases", force: :cascade do |t|
     t.string "name"
     t.string "kind"
     t.string "description"
@@ -23,7 +26,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_14_045257) do
     t.string "password"
   end
 
-  create_table "database_schemas", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "database_schemas", force: :cascade do |t|
     t.string "name"
     t.bigint "connect_database_id", null: false
     t.datetime "created_at", null: false
@@ -32,7 +35,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_14_045257) do
     t.index ["connect_database_id"], name: "index_database_schemas_on_connect_database_id"
   end
 
-  create_table "database_tables", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "database_tables", force: :cascade do |t|
     t.string "name"
     t.bigint "database_schema_id", null: false
     t.string "comment"
@@ -41,7 +44,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_14_045257) do
     t.index ["database_schema_id"], name: "index_database_tables_on_database_schema_id"
   end
 
-  create_table "table_fields", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "table_fields", force: :cascade do |t|
     t.bigint "database_table_id", null: false
     t.string "field"
     t.string "data_type"
