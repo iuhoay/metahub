@@ -18,4 +18,6 @@ Rails.application.routes.draw do
       post 'sync_schemas'
     end
   end
+
+  mount GoodJob::Engine => "/good_job" if Rails.env.development?
 end
