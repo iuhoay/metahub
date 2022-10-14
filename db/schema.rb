@@ -10,14 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_12_102949) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_14_022616) do
   create_table "connect_databases", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "kind"
-    t.string "url"
     t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "host"
+    t.integer "port"
   end
 
+  create_table "database_schemas", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.bigint "connect_database_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["connect_database_id"], name: "index_database_schemas_on_connect_database_id"
+  end
+
+  add_foreign_key "database_schemas", "connect_databases"
 end

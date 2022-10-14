@@ -29,7 +29,7 @@ class DatabasesController < ApplicationController
   private
 
   def database_params
-    params.require(:database).permit(:name, :kind, :url, :description)
+    params.require(:database).permit(:name, :kind, :host, :port, :description)
   end
 
   def set_database

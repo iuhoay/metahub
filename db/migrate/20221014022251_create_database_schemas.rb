@@ -1,0 +1,10 @@
+class CreateDatabaseSchemas < ActiveRecord::Migration[7.0]
+  def change
+    create_table :database_schemas do |t|
+      t.string :name
+      t.belongs_to :connect_database, null: false, foreign_key: true
+
+      t.timestamps
+    end
+  end
+end
