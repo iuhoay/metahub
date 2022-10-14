@@ -9,6 +9,13 @@ class Database < ApplicationRecord
   validates :port, presence: true
   validates :username, presence: true
 
+  def get_connection(database)
+    case kind
+    when 'mysql'
+      Mysql2::Client.new(host: host, port: port, username: username, password: password, database: database)
+    end
+  end
+
   def url
     "#{kind}://#{host}:#{port}"
   end
