@@ -1,0 +1,26 @@
+.row
+  .col-8.h1
+    = link_to @database.name, @database
+    | /
+    = link_to @database_schema.name, database_database_schema_path(@database, @database_schema)
+    | /
+    = @database_table.name
+  .col-4.text-end
+    = link_to 'Sync', sync_fields_database_database_schema_database_table_path(@database, @database_schema, @database_table), data: { 'turbo-method': :post }, class: 'btn btn-link btn-warning'
+
+table.table
+  thread
+    tr
+      th Field
+      th Type
+      th Comment
+      th.text-end Created At
+      th.text-end Latest Update
+  tbody
+    - @database_table.table_fields.each do |field|
+      tr
+        td= field.field
+        td= field.data_type
+        td= field.comment
+        td.text-end= field.created_at
+        td.text-end= field.updated_at

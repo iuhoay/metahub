@@ -1,0 +1,2 @@
+module DatabaseTablesHelper
+end

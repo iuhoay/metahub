@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_14_031816) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_14_045257) do
   create_table "connect_databases", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "kind"
@@ -41,6 +41,21 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_14_031816) do
     t.index ["database_schema_id"], name: "index_database_tables_on_database_schema_id"
   end
 
+  create_table "table_fields", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "database_table_id", null: false
+    t.string "field"
+    t.string "data_type"
+    t.string "key"
+    t.boolean "nullable"
+    t.string "default_value"
+    t.string "field_extra"
+    t.string "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["database_table_id"], name: "index_table_fields_on_database_table_id"
+  end
+
   add_foreign_key "database_schemas", "connect_databases"
   add_foreign_key "database_tables", "database_schemas"
+  add_foreign_key "table_fields", "database_tables"
 end
