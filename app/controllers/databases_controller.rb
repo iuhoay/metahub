@@ -1,5 +1,5 @@
 class DatabasesController < ApplicationController
-  before_action :set_database, only: [:show, :edit, :update, :destroy]
+  before_action :set_database, only: [:show, :edit, :update, :destroy, :sync_schemas]
 
   def index
     @databases = Database.all
@@ -24,6 +24,15 @@ class DatabasesController < ApplicationController
     else
       render :edit, status: :unprocessable_entity
     end
+  end
+
+  def show
+    @database_schemas = @database.schemas
+  end
+
+  def sync_schemas
+    @database.sync_schemas
+    redirect_to database_path(@database)
   end
 
   private

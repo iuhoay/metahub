@@ -1,0 +1,19 @@
+.row
+  .col-6
+    h1= @database.name
+  .col-6.text-end
+    = link_to 'Sync', sync_schemas_database_path(@database), data: { 'turbo-method': :post }, class: 'btn btn-link btn-warning'
+
+table.table
+  thead
+    tr
+      th Schema
+      th Latest Update
+      th
+  tbody
+    - @database_schemas.each do |schema|
+      tr
+        td= schema.name
+        td= schema.updated_at
+        td
+          = link_to 'Show', '', class: 'btn btn-sm btn-primary me-2'
