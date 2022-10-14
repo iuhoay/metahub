@@ -1,0 +1,21 @@
+.row
+  .col-6.h1
+    = link_to @database.name, @database
+    = " - #{@database_schema.name}"
+  .col-6.text-end
+    = link_to 'Sync', sync_tables_database_database_schema_path(@database), data: { 'turbo-method': :post }, class: 'btn btn-link btn-warning'
+
+table.table
+  thread
+    tr
+      th Table
+      th Comment
+      th.text-end Created At
+      th.text-end Latest Update
+  tbody
+    - @database_schema.tables.each do |table|
+      tr
+        td= table.name
+        td= table.comment
+        td.text-end= table.created_at
+        td.text-end= table.updated_at

@@ -5,9 +5,9 @@ class DatabaseSchema < ApplicationRecord
   def sync_tables
     conn = database.get_connection(name)
     conn.query('SHOW TABLE STATUS').each do |row|
-      tables.find_or_create_by!(name: row['Name']) do |t|
-        t.comment = row['Comment']
-      end
+      table = tables.find_or_initialize_by(name: row['Name'])
+      table.comment = row['Comment']
+      table.save!
     end
   end
 end
