@@ -5,5 +5,9 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "articles#index"
 
-  resources :databases
+  resources :databases do
+    member do
+      post 'sync_schemas'
+    end
+  end
 end
