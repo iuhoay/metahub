@@ -1,6 +1,8 @@
-.row
-  .col-6
-    h1= @database.name
+.row.mb-2
+  .col-6.h1
+    = link_to 'Metahub', root_path
+    | /
+    = @database.name
   .col-6.text-end
     = link_to 'Sync', sync_schemas_database_path(@database), data: { 'turbo-method': :post }, class: 'btn btn-link btn-warning'
 
@@ -9,13 +11,13 @@ table.table
     tr
       th Schema
       th Tables
-      th Latest Update
-      th
+      th.text-end Latest Update
+      th.text-end Actions
   tbody
     - @database_schemas.each do |schema|
       tr
         td= schema.name
         td= link_to schema.database_tables_count || 'not sync', database_database_schema_path(@database, schema)
-        td= schema.updated_at
-        td
+        td.text-end= schema.updated_at
+        td.text-end
           = link_to 'Sync', sync_tables_database_database_schema_path(@database, schema), data: { 'turbo-method': :post }, class: 'btn btn-sm btn-warning'
