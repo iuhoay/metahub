@@ -1,11 +1,13 @@
 Rails.application.routes.draw do
-  get 'databases/index'
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Defines the root path route ("/")
-  # root "articles#index"
+  root 'databases#index'
 
   resources :databases do
+    resources :database_schemas do
+      member do
+        post :sync_tables
+      end
+    end
+
     member do
       post 'sync_schemas'
     end

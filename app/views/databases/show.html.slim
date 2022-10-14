@@ -8,12 +8,14 @@ table.table
   thead
     tr
       th Schema
+      th Tables
       th Latest Update
       th
   tbody
     - @database_schemas.each do |schema|
       tr
         td= schema.name
+        td= link_to schema.database_tables_count || 'not sync', database_database_schema_path(@database, schema)
         td= schema.updated_at
         td
-          = link_to 'Show', '', class: 'btn btn-sm btn-primary me-2'
+          = link_to 'Sync', sync_tables_database_database_schema_path(@database, schema), data: { 'turbo-method': :post }, class: 'btn btn-sm btn-warning'
