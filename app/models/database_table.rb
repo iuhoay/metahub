@@ -17,4 +17,130 @@ class DatabaseTable < ApplicationRecord
     end
     conn.close
   end
+
+  def ods_table_name
+    "ods_#{database_schema.name}.#{name}"
+  end
+
+  def generate_sql_script
+    dir_path = Rails.root.join('tmp', 'sql_scripts', "ods_#{database_schema.name}", name)
+    FileUtils.mkdir_p(dir_path) unless File.exists?(dir_path)
+    file_path = File.join(dir_path, "#{name}.sql")
+    File.open(file_path, 'w') do |file|
+      file.write(create_hive_table_script)
+    end
+  end
+
+  def generate_datax_script
+    dir_path = Rails.root.join('tmp', 'sql_scripts', "ods_#{database_schema.name}", name)
+    FileUtils.mkdir_p(dir_path) unless File.exists?(dir_path)
+    file_path = File.join(dir_path, "#{name}.json")
+    File.open(file_path, 'w') do |file|
+      file.write(create_datax_script)
+    end
+  end
+
+  private
+
+  def create_hive_table_script
+    script = "CREATE EXTERNAL TABLE #{ods_table_name} (\n"
+    script += "\tid int\n"
+    script += ") partitioned by (`ds` string comment '日期')\n"
+    script += "\tROW FORMAT DELIMITED\n"
+    script += "\t\tFIELDS TERMINATED BY '\\001'\n"
+    script += "\t\tLINES TERMINATED BY '\\n'\n"
+    script += "\tSTORED AS ORC;\n\n"
+
+    script += "ALTER TABLE #{ods_table_name} SET TBLPROPERTIES('COMMENT'='#{comment}');\n\n" if comment.present?
+
+    script += "ALTER TABLE #{ods_table_name} REPLACE COLUMNS (\n"
+    table_fields.each_with_index do |field, index|
+      script += "\t#{field.to_hive_column}"
+      script += " COMMENT '#{field.comment}'" if field.comment.present?
+      if (index + 1) < table_fields.size
+        script += ",\n"
+      else
+        script += ");"
+      end
+    end
+    script
+  end
+
+  def create_datax_script
+    json_builder = Jbuilder.new do |json|
+      json.job do
+        json.setting do
+          json.speed do
+            json.channel(3)
+            json.byte(1048576)
+          end
+          json.errorLimit do
+            json.record(0)
+            json.percentage(0.02)
+          end
+        end
+        json.content do
+          json.child! do
+            json.reader do
+              json.name('mysqlreader')
+              json.parameter do
+                json.username("${username}")
+                json.password("${password}")
+                json.column(table_fields.map(&:field))
+              end
+              json.where("create_time<'${today}'")
+              json.splitPk('id')
+              json.connection do
+                json.child! do
+                  json.table(['${table}'])
+                  json.jdbcUrl(['jdbc:mysql://${src_db_ip}:${src_db_port}/${src_db_name}?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false&useSSL=false'])
+                end
+              end
+            end
+          end
+          json.child! do
+            json.writer do
+              json.name('hdfswriter')
+              json.parameter do
+                json.defaultFS("hdfs://nameservice1")
+                json.hadoopConfig do
+                  json.child! do
+                    json.key('dfs.nameservices')
+                    json.value('nameservice1')
+                  end
+                  json.child! do
+                    json.key('dfs.ha.namenodes.nameservice1')
+                    json.value('namenode33,namenode34')
+                  end
+                  json.child! do
+                    json.key('dfs.namenode.rpc-address.nameservice1.namenode33')
+                    json.value('${nn1_ip}:${ns_port}')
+                  end
+                  json.child! do
+                    json.key('dfs.namenode.rpc-address.nameservice1.namenode34')
+                    json.value('${nn2_ip}:${ns_port}')
+                  end
+                  json.child! do
+                    json.key('dfs.client.failover.proxy.provider.nameservice1')
+                    json.value('org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider')
+                  end
+                end
+                json.fileType('orc')
+                json.path("${hive_default_data_dir}/${db_name}.db/${table_name}/ds=${yesterday}")
+                json.fileName("${db_name}-${table_name}")
+                json.writeMode('append')
+                json.fieldDelimiter('\u0001')
+                json.column table_fields do |field|
+                  json.name(field.field)
+                  json.type(field.get_hive_type)
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+
+    json_builder.target!
+  end
 end

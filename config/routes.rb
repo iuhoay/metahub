@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  root 'databases#index'
+  root 'database_schemas#index'
 
   resources :databases do
     resources :database_schemas do
@@ -11,6 +11,9 @@ Rails.application.routes.draw do
 
       member do
         post :sync_tables
+        post :pin
+        delete :unpin
+        post :export_hive
       end
     end
 
