@@ -1,24 +1,10 @@
-# README
+# Metahub
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+数仓数据源管理，脚本生成，自动检查库表字段更改。
 
-Things you may want to cover:
 
-* Ruby version
+## TODO
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+- [x] 数据源管理
+- [x] 脚本生成
+- [ ] 库表字段检查
