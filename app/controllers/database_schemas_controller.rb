@@ -26,10 +26,22 @@ class DatabaseSchemasController < ApplicationController
     redirect_to [@database, @database_schema], notice: 'SQL files was successfully created.'
   end
 
+  def update
+    if @database_schema.update(database_schema_params)
+      redirect_to [@database, @database_schema], notice: 'Database schema was successfully updated.'
+    else
+      render :edit
+    end
+  end
+
   private
 
   def set_database_schema
     @database_schema = DatabaseSchema.find(params[:id])
     @database = @database_schema.database
+  end
+
+  def database_schema_params
+    params.require(:database_schema).permit(:alias_name)
   end
 end
