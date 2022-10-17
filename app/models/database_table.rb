@@ -19,22 +19,22 @@ class DatabaseTable < ApplicationRecord
   end
 
   def ods_table_name
-    "ods_#{database_schema.name}.#{name}"
+    "#{database_schema.ods_schema_name}.#{name}"
   end
 
   def generate_sql_script
-    dir_path = Rails.root.join('tmp', 'sql_scripts', 'init_ods_db', "ods_#{database_schema.name}")
+    dir_path = Rails.root.join('tmp', 'sql_scripts', 'init_ods_db', database_schema.ods_schema_name)
     FileUtils.mkdir_p(dir_path) unless File.exists?(dir_path)
-    file_path = File.join(dir_path, "ods_#{database_schema.name}_#{name}.sql")
+    file_path = File.join(dir_path, "ods_#{database_schema.ods_schema_name}_#{name}.sql")
     File.open(file_path, 'w') do |file|
       file.write(create_hive_table_script)
     end
   end
 
   def generate_datax_script
-    dir_path = Rails.root.join('tmp', 'sql_scripts', database_schema.name, "ods_#{database_schema.name}_#{name}")
+    dir_path = Rails.root.join('tmp', 'sql_scripts', database_schema.ods_schema_name, "#{database_schema.ods_schema_name}_#{name}")
     FileUtils.mkdir_p(dir_path) unless File.exists?(dir_path)
-    file_path = File.join(dir_path, "ods_#{database_schema.name}_#{name}.json")
+    file_path = File.join(dir_path, "#{database_schema.ods_schema_name}_#{name}.json")
     File.open(file_path, 'w') do |file|
       file.write(create_datax_script)
     end
