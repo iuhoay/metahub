@@ -23,18 +23,18 @@ class DatabaseTable < ApplicationRecord
   end
 
   def generate_sql_script
-    dir_path = Rails.root.join('tmp', 'sql_scripts', "ods_#{database_schema.name}", name)
+    dir_path = Rails.root.join('tmp', 'sql_scripts', 'init_ods_db', "ods_#{database_schema.name}")
     FileUtils.mkdir_p(dir_path) unless File.exists?(dir_path)
-    file_path = File.join(dir_path, "#{name}.sql")
+    file_path = File.join(dir_path, "ods_#{database_schema.name}_#{name}.sql")
     File.open(file_path, 'w') do |file|
       file.write(create_hive_table_script)
     end
   end
 
   def generate_datax_script
-    dir_path = Rails.root.join('tmp', 'sql_scripts', "ods_#{database_schema.name}", name)
+    dir_path = Rails.root.join('tmp', 'sql_scripts', database_schema.name, "ods_#{database_schema.name}_#{name}")
     FileUtils.mkdir_p(dir_path) unless File.exists?(dir_path)
-    file_path = File.join(dir_path, "#{name}.json")
+    file_path = File.join(dir_path, "ods_#{database_schema.name}_#{name}.json")
     File.open(file_path, 'w') do |file|
       file.write(create_datax_script)
     end
@@ -43,19 +43,24 @@ class DatabaseTable < ApplicationRecord
   private
 
   def create_hive_table_script
-    script = "CREATE EXTERNAL TABLE #{ods_table_name} (\n"
-    script += "\tid int\n"
+    script = "CREATE TABLE IF NOT EXISTS #{ods_table_name}\n"
+    script += "(\n"
+    script += "    id int\n"
     script += ") partitioned by (`ds` string comment '日期')\n"
-    script += "\tROW FORMAT DELIMITED\n"
-    script += "\t\tFIELDS TERMINATED BY '\\001'\n"
-    script += "\t\tLINES TERMINATED BY '\\n'\n"
-    script += "\tSTORED AS ORC;\n\n"
+    script += "    ROW FORMAT DELIMITED\n"
+    script += "        FIELDS TERMINATED BY '\\001'\n"
+    script += "        LINES TERMINATED BY '\\n'\n"
+    script += "    STORED AS ORC;\n\n"
 
-    script += "ALTER TABLE #{ods_table_name} SET TBLPROPERTIES('COMMENT'='#{comment}');\n\n" if comment.present?
+    if comment.present?
+      script += "ALTER TABLE #{ods_table_name}\n"
+      script += "    SET TBLPROPERTIES('COMMENT'='#{comment}');\n\n"
+    end
 
-    script += "ALTER TABLE #{ods_table_name} REPLACE COLUMNS (\n"
+    script += "ALTER TABLE #{ods_table_name}\n"
+    script += "    REPLACE COLUMNS (\n"
     table_fields.each_with_index do |field, index|
-      script += "\t#{field.to_hive_column}"
+      script += "        #{field.to_hive_column}"
       script += " COMMENT '#{field.comment}'" if field.comment.present?
       if (index + 1) < table_fields.size
         script += ",\n"
