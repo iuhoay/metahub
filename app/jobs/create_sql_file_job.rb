@@ -6,5 +6,6 @@ class CreateSqlFileJob < ApplicationJob
       table.generate_sql_script
       table.generate_datax_script
     end
+    database_schema.generate_jobs
   end
 end
