@@ -23,9 +23,9 @@ class DatabaseTable < ApplicationRecord
   end
 
   def generate_sql_script
-    dir_path = Rails.root.join('tmp', 'sql_scripts', 'init_ods_db', database_schema.ods_schema_name)
+    dir_path = Rails.root.join('tmp', 'sql_scripts', 'init_ods_db', database_schema.schema_name)
     FileUtils.mkdir_p(dir_path) unless File.exists?(dir_path)
-    file_path = File.join(dir_path, "ods_#{database_schema.ods_schema_name}-#{name}.sql")
+    file_path = File.join(dir_path, "#{name}.sql")
     File.open(file_path, 'w') do |file|
       file.write(create_hive_table_script)
     end
@@ -76,8 +76,7 @@ class DatabaseTable < ApplicationRecord
       json.job do
         json.setting do
           json.speed do
-            json.channel(3)
-            json.byte(1048576)
+            json.channel(1)
           end
           json.errorLimit do
             json.record(0)
@@ -108,9 +107,9 @@ class DatabaseTable < ApplicationRecord
                 json.defaultFS("hdfs://nameservice1")
                 json.hadoopConfig do
                   json.set! 'dfs.nameservices', 'nameservice1'
-                  json.set! 'dfs.ha.namenodes.nameservice1', 'namenode33,namenode34'
-                  json.set! 'dfs.namenode.rpc-address.nameservice1.namenode33', '${nn1_ip}:${ns_port}'
-                  json.set! 'dfs.namenode.rpc-address.nameservice1.namenode34', '${nn2_ip}:${ns_port}'
+                  json.set! 'dfs.ha.namenodes.nameservice1', 'namenode1,namenode2'
+                  json.set! 'dfs.namenode.rpc-address.nameservice1.namenode1', '${nn1_ip}:${ns_port}'
+                  json.set! 'dfs.namenode.rpc-address.nameservice1.namenode2', '${nn2_ip}:${ns_port}'
                   json.set! 'dfs.client.failover.proxy.provider.nameservice1', 'org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider'
                 end
                 json.fileType('orc')
