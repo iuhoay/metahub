@@ -6,6 +6,10 @@ class DatabaseSchema < ApplicationRecord
     "ods_#{alias_name || name}"
   end
 
+  def schema_name
+    alias_name || name
+  end
+
   def sync_tables
     conn = database.get_connection(name)
     conn.query('SHOW TABLE STATUS').each do |row|
