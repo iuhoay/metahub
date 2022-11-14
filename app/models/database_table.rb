@@ -32,7 +32,7 @@ class DatabaseTable < ApplicationRecord
   end
 
   def generate_datax_script
-    dir_path = Rails.root.join('tmp', 'sql_scripts', database_schema.ods_schema_name, "#{database_schema.ods_schema_name}-#{name}")
+    dir_path = Rails.root.join('tmp', 'sql_scripts', 'data_fetch_outer_source', database_schema.schema_name, "#{database_schema.ods_schema_name}-#{name}")
     FileUtils.mkdir_p(dir_path) unless File.exists?(dir_path)
     file_path = File.join(dir_path, "#{database_schema.ods_schema_name}-#{name}.json")
     File.open(file_path, 'w') do |file|
