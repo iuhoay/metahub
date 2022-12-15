@@ -3,7 +3,7 @@ class DatabaseSchema < ApplicationRecord
   has_many :tables, class_name: 'DatabaseTable', foreign_key: 'database_schema_id'
 
   def ods_schema_name
-    "ods_#{alias_name || name}"
+    "#{alias_name || name}"
   end
 
   def schema_name
