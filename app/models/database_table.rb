@@ -19,15 +19,15 @@ class DatabaseTable < ApplicationRecord
   end
 
   def ods_table_name
-    "#{database_schema.ods_schema_name}.#{name}"
+    "#{database_schema.ods_schema_name}.#{database_schema.hive_table_prefix}_#{name}_all_dd"
   end
 
   def generate_sql_script
     dir_path = Rails.root.join('tmp', 'sql_scripts', 'init_ods_db', database_schema.schema_name)
     FileUtils.mkdir_p(dir_path) unless File.exists?(dir_path)
-    file_path = File.join(dir_path, "#{name}.sql")
+    file_path = File.join(dir_path, "#{database_schema.hive_table_prefix}_#{name}.sql")
     File.open(file_path, 'w') do |file|
-      file.write(create_hive_table_script)
+      file.write(create_hive_table_init_script)
     end
   end
 
@@ -41,6 +41,28 @@ class DatabaseTable < ApplicationRecord
   end
 
   private
+
+  def create_hive_table_init_script
+    script = "CREATE EXTERNAL TABLE IF NOT EXISTS #{ods_table_name}\n"
+    script += "(\n"
+    table_fields.each_with_index do |field, index|
+      script += "  #{field.to_hive_column}"
+      script += " COMMENT '#{field.comment}'" if field.comment.present?
+      if (index + 1) < table_fields.size
+        script += ",\n"
+      else
+        script += "\n)\n"
+      end
+    end
+    script += "COMMENT '#{comment}'\n" if comment.present?
+    script += "PARTITIONED BY (`ds` string comment '分区')\n"
+    script += "ROW FORMAT DELIMITED\n"
+    script += "NULL DEFINED AS \"\"\n"
+    script += "STORED AS ORC\n"
+    script += "LOCATION 'hdfs://qncluster/data/warehouse/tablespace/external/hive/#{database_schema.alias_name}.db/#{database_schema.hive_table_prefix}_#{name}'\n"
+    script += 'TBLPROPERTIES ("auto.purge"="true");'
+    script
+  end
 
   def create_hive_table_script
     script = "CREATE TABLE IF NOT EXISTS #{ods_table_name}\n"

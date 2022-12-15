@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_17_120257) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_15_053336) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -35,6 +35,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_17_120257) do
     t.integer "database_tables_count"
     t.datetime "pin_at"
     t.string "alias_name"
+    t.string "hive_table_prefix"
     t.index ["connect_database_id"], name: "index_database_schemas_on_connect_database_id"
   end
 
