@@ -25,7 +25,7 @@ class DatabaseTable < ApplicationRecord
   def generate_sql_script
     dir_path = Rails.root.join('tmp', 'sql_scripts', 'init_ods_db', database_schema.schema_name)
     FileUtils.mkdir_p(dir_path) unless File.exists?(dir_path)
-    file_path = File.join(dir_path, "#{database_schema.hive_table_prefix}_#{name}.sql")
+    file_path = File.join(dir_path, "#{database_schema.hive_table_prefix}_#{name}_all_dd.sql")
     File.open(file_path, 'w') do |file|
       file.write(create_hive_table_init_script)
     end
