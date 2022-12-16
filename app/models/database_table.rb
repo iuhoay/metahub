@@ -54,12 +54,12 @@ class DatabaseTable < ApplicationRecord
         script += "\n)\n"
       end
     end
-    script += "COMMENT '#{comment}'\n" if comment.present?
+    script += "COMMENT '#{database_schema.comment_name}#{comment}'\n" if comment.present?
     script += "PARTITIONED BY (`ds` string comment '分区')\n"
     script += "ROW FORMAT DELIMITED\n"
     script += "NULL DEFINED AS \"\"\n"
     script += "STORED AS ORC\n"
-    script += "LOCATION 'hdfs://qncluster/data/warehouse/tablespace/external/hive/#{database_schema.alias_name}.db/#{database_schema.hive_table_prefix}_#{name}'\n"
+    script += "LOCATION 'hdfs://qncluster/data/warehouse/tablespace/external/hive/#{database_schema.alias_name}.db/#{database_schema.hive_table_prefix}_#{name}_all_dd'\n"
     script += 'TBLPROPERTIES ("auto.purge"="true");'
     script
   end
