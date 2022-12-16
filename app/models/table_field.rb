@@ -12,7 +12,7 @@ class TableField < ApplicationRecord
     when 'varchar', 'char', 'text', 'longtext', 'mediumtext', 'tinytext', 'json', 'varbinary', 'longblob', 'mediumblob'
       'string'
     when 'int', 'tinyint', 'smallint'
-      'int'
+      'bigint'
     when 'mediumint', 'bigint'
       'bigint'
     when 'decimal', 'double', 'float'
