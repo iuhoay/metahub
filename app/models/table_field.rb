@@ -4,7 +4,11 @@ class TableField < ApplicationRecord
   DATA_TYPE_REGEX = /(?<type>\w+)\(?(?<length>\d+)?,?((?<scale>\d+))?/
 
   def to_hive_column
-    "`#{ActiveSupport::Inflector.underscore(field)}` #{get_hive_type}"
+    "`#{to_hive_column_name}` #{get_hive_type}"
+  end
+
+  def to_hive_column_name
+    ActiveSupport::Inflector.underscore(field)
   end
 
   def get_hive_type
@@ -17,6 +21,23 @@ class TableField < ApplicationRecord
       'bigint'
     when 'decimal', 'double', 'float'
       "decimal(#{data_type_length}, #{data_type_scale})"
+    when 'date', 'datetime', 'timestamp'
+      'string'
+    else
+      raise "Unknown data type: #{data_type}"
+    end
+  end
+
+  def get_hive_type_on_datax
+    case data_type_name
+    when 'varchar', 'char', 'text', 'longtext', 'mediumtext', 'tinytext', 'json', 'varbinary', 'longblob', 'mediumblob'
+      'string'
+    when 'int', 'tinyint', 'smallint'
+      'bigint'
+    when 'mediumint', 'bigint'
+      'bigint'
+    when 'decimal', 'double', 'float'
+      "double"
     when 'date', 'datetime', 'timestamp'
       'string'
     else
