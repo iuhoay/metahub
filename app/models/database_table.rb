@@ -32,9 +32,9 @@ class DatabaseTable < ApplicationRecord
   end
 
   def generate_datax_script
-    dir_path = Rails.root.join('tmp', 'sql_scripts', 'data_fetch_outer_source', database_schema.schema_name, "#{database_schema.ods_schema_name}-#{name}")
+    dir_path = Rails.root.join('tmp', 'sql_scripts', 'data_fetch_outer_source', database_schema.schema_name)
     FileUtils.mkdir_p(dir_path) unless File.exists?(dir_path)
-    file_path = File.join(dir_path, "#{database_schema.ods_schema_name}-#{name}.json")
+    file_path = File.join(dir_path, "#{database_schema.hive_table_prefix}_#{name}_all_dd.json")
     File.open(file_path, 'w') do |file|
       file.write(create_datax_script)
     end
@@ -113,13 +113,13 @@ class DatabaseTable < ApplicationRecord
                 json.username("${username}")
                 json.password("${password}")
                 json.column(table_fields.map(&:field))
+                json.where("create_time < '${curr_datetime}'")
                 json.connection do
                   json.child! do
                     json.table([name])
                     json.jdbcUrl(['jdbc:mysql://${src_db_ip}:${src_db_port}/${src_db_name}?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false&useSSL=false'])
                   end
                 end
-                # json.where("create_time<'${today}'")
                 json.splitPk('id')
               end
             end
@@ -130,18 +130,19 @@ class DatabaseTable < ApplicationRecord
                 json.hadoopConfig do
                   json.set! 'dfs.nameservices', 'nameservice1'
                   json.set! 'dfs.ha.namenodes.nameservice1', 'namenode1,namenode2'
-                  json.set! 'dfs.namenode.rpc-address.nameservice1.namenode1', '${nn1_ip}:${ns_port}'
-                  json.set! 'dfs.namenode.rpc-address.nameservice1.namenode2', '${nn2_ip}:${ns_port}'
+                  json.set! 'dfs.namenode.rpc-address.nameservice1.namenode1', 'hadoop-master-001:8020'
+                  json.set! 'dfs.namenode.rpc-address.nameservice1.namenode2', 'hadoop-master-002:8020'
                   json.set! 'dfs.client.failover.proxy.provider.nameservice1', 'org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider'
                 end
                 json.fileType('orc')
                 json.path("${hive_default_data_dir}/#{database_schema.ods_schema_name}.db/#{name}/ds=${yesterday}")
-                json.fileName("#{database_schema.ods_schema_name}-#{name}")
+                json.path("/data/warehouse/tablespace/external/hive/#{database_schema.alias_name}.db/#{database_schema.hive_table_prefix}_#{name}_all_dd/ds=${yesterday}")
+                json.fileName("#{database_schema.ods_schema_name}-#{database_schema.hive_table_prefix}_#{name}_all_dd")
                 json.writeMode('append')
                 json.fieldDelimiter("\u0001")
                 json.column table_fields do |field|
-                  json.name(field.field)
-                  json.type(field.get_hive_type)
+                  json.name(field.to_hive_column_name)
+                  json.type(field.get_hive_type_on_datax)
                 end
               end
             end
