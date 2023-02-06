@@ -19,13 +19,13 @@ class DatabaseTable < ApplicationRecord
   end
 
   def ods_table_name
-    "#{database_schema.ods_schema_name}.#{database_schema.hive_table_prefix}_#{name}_all_dd"
+    "#{database_schema.ods_schema_name}.ods_#{table_name_all_dd}"
   end
 
   def generate_sql_script
     dir_path = Rails.root.join('tmp', 'sql_scripts', 'init_ods_db', database_schema.schema_name)
     FileUtils.mkdir_p(dir_path) unless File.exists?(dir_path)
-    file_path = File.join(dir_path, "#{database_schema.hive_table_prefix}_#{name}_all_dd.sql")
+    file_path = File.join(dir_path, "ods_#{table_name_all_dd}.sql")
     File.open(file_path, 'w') do |file|
       file.write(create_hive_table_init_script)
     end
@@ -34,13 +34,40 @@ class DatabaseTable < ApplicationRecord
   def generate_datax_script
     dir_path = Rails.root.join('tmp', 'sql_scripts', 'data_fetch_outer_source', database_schema.schema_name)
     FileUtils.mkdir_p(dir_path) unless File.exists?(dir_path)
-    file_path = File.join(dir_path, "#{database_schema.hive_table_prefix}_#{name}_all_dd.json")
+    file_path = File.join(dir_path, "ods_#{table_name_all_dd}.json")
     File.open(file_path, 'w') do |file|
       file.write(create_datax_script)
     end
   end
 
+  def generate_dwd_job
+    dir_path = Rails.root.join('tmp', 'sql_scripts', 'dwd_job', database_schema.schema_name)
+    FileUtils.mkdir_p(dir_path) unless File.exists?(dir_path)
+    file_path = File.join(dir_path, "dwd_#{table_name_all_dd}.job")
+    File.open(file_path, 'w') do |file|
+      file.write(create_dwd_job_file)
+    end
+  end
+
+  def table_name_all_dd
+    if database_schema.hive_table_prefix.present?
+      "#{database_schema.hive_table_prefix}_#{name}_all_dd"
+    else
+      "#{name}_all_dd"
+    end
+  end
+
   private
+
+  def create_dwd_job_file
+    # type=command
+    # command=sh ../../../utilities/shell/update_data_common.sh db_rent/dwd/dwd_rent_order_change_log_all_dd.sql ${start_datetime} ${end_datetime}
+    # dependencies=
+    script = "type=command\n"
+    script += "command=sh ../../../utilities/shell/update_data_common.sh #{database_schema.schema_name}/dwd/dwd_#{table_name_all_dd}.sql ${start_datetime} ${end_datetime}\n"
+    script += "dependencies=\n"
+    script
+  end
 
   def create_hive_table_init_script
     script = "CREATE EXTERNAL TABLE IF NOT EXISTS #{ods_table_name}\n"
@@ -59,7 +86,7 @@ class DatabaseTable < ApplicationRecord
     script += "ROW FORMAT DELIMITED\n"
     script += "NULL DEFINED AS \"\"\n"
     script += "STORED AS ORC\n"
-    script += "LOCATION 'hdfs://qncluster/data/warehouse/tablespace/external/hive/#{database_schema.alias_name}.db/#{database_schema.hive_table_prefix}_#{name}_all_dd'\n"
+    script += "LOCATION 'hdfs://qncluster/data/warehouse/tablespace/external/hive/#{database_schema.alias_name}.db/ods_#{table_name_all_dd}'\n"
     script += 'TBLPROPERTIES ("auto.purge"="true");'
     script
   end
@@ -136,8 +163,8 @@ class DatabaseTable < ApplicationRecord
                 end
                 json.fileType('orc')
                 json.path("${hive_default_data_dir}/#{database_schema.ods_schema_name}.db/#{name}/ds=${yesterday}")
-                json.path("/data/warehouse/tablespace/external/hive/#{database_schema.alias_name}.db/#{database_schema.hive_table_prefix}_#{name}_all_dd/ds=${yesterday}")
-                json.fileName("#{database_schema.ods_schema_name}-#{database_schema.hive_table_prefix}_#{name}_all_dd")
+                json.path("/data/warehouse/tablespace/external/hive/#{database_schema.alias_name}.db/ods_#{table_name_all_dd}/ds=${yesterday}")
+                json.fileName("#{database_schema.ods_schema_name}-ods_#{table_name_all_dd}")
                 json.writeMode('append')
                 json.fieldDelimiter("\u0001")
                 json.column table_fields do |field|
