@@ -1,6 +1,8 @@
 class TableField < ApplicationRecord
   belongs_to :database_table
 
+  acts_as_list scope: :database_table
+
   DATA_TYPE_REGEX = /(?<type>\w+)\(?(?<length>\d+)?,?((?<scale>\d+))?/
 
   def to_hive_column

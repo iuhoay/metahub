@@ -1,6 +1,6 @@
 class DatabaseTable < ApplicationRecord
   belongs_to :database_schema, counter_cache: true
-  has_many :table_fields, dependent: :destroy
+  has_many :table_fields, -> { order(position: :asc) }, dependent: :destroy
 
   def sync_fields
     conn = database_schema.database.get_connection(database_schema.name)
