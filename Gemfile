@@ -80,3 +80,5 @@ gem 'simple_form'
 gem 'slim-rails'
 gem 'good_job', '~> 3.4'
 gem 'font-awesome-sass', '~> 6.2.0'
+
+gem "acts_as_list", "~> 1.1"
