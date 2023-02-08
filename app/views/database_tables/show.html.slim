@@ -11,6 +11,7 @@
 table.table
   thread
     tr
+      th Position
       th Field
       th Type
       th Null
@@ -22,6 +23,7 @@ table.table
   tbody
     - @database_table.table_fields.each do |field|
       tr
+        td= field.position
         td= field.field
         td= field.data_type
         td= field.nullable
