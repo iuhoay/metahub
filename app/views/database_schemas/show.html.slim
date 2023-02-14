@@ -9,6 +9,7 @@
     - else
       = link_to icon('fa-solid', 'user-secret', class: 'fa-7x, fa-shake'), pin_database_database_schema_path(@database, @database_schema), data: { 'turbo-method': :post }, class: 'btn'
 
+    = link_to 'Edit', edit_database_database_schema_path(@database, @database_schema), class: 'btn btn-link btn-warning'
     = link_to 'Sync', sync_tables_database_database_schema_path(@database), data: { 'turbo-method': :post }, class: 'btn btn-link btn-warning'
     = link_to 'Export Hive', export_hive_database_database_schema_path(@database), data: { 'turbo-method': :post }, class: 'btn btn-link btn-warning'
 

@@ -1,0 +1,7 @@
+tr
+  td= database_schema.name
+  td= link_to database_schema.database_tables_count || 'not sync', database_database_schema_path(@database, database_schema)
+  td.text-end= database_schema.updated_at
+  td.text-end
+    = link_to 'Edit', edit_database_database_schema_path(@database, database_schema), class: 'btn btn-sm btn-warning me-2'
+    = link_to 'Sync', sync_tables_database_database_schema_path(@database, database_schema), data: { 'turbo-method': :post }, class: 'btn btn-sm btn-info'
