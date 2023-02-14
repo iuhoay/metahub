@@ -23,7 +23,11 @@ table.table
   tbody
     - @database_table.table_fields.each do |field|
       tr
-        td= field.position
+        td
+          // edit position
+          = simple_form_for [@database, @database_schema, @database_table, field] do |f|
+            = f.input :position, as: :string
+            = f.submit
         td= field.field
         td= field.data_type
         td= field.nullable

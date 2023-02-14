@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   resources :databases do
     resources :database_schemas do
       resources :database_tables do
+        resources :table_fields
         member do
           post :sync_fields
         end
