@@ -1,6 +1,7 @@
 .row.mb-2
   .col-6.h1
     = link_to 'Metahub', root_path
+    | /Database
   .col-6.text-end
     = link_to 'Connect Database', new_database_path, class: 'btn btn-link'
 
@@ -9,7 +10,6 @@ table.table
     tr
       th Name
       th Description
-      th URL
       th Kind
       th.text-end Actions
   tbody
@@ -17,7 +17,6 @@ table.table
       tr
         td= database.name
         td= database.description
-        td= database.url
         td= database.kind
         td.text-end
           = link_to 'Show', database_path(database), class: 'btn btn-sm btn-primary'
