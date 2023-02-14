@@ -14,10 +14,4 @@ table.table
       th.text-end Latest Update
       th.text-end Actions
   tbody
-    - @database_schemas.each do |schema|
-      tr
-        td= schema.name
-        td= link_to schema.database_tables_count || 'not sync', database_database_schema_path(@database, schema)
-        td.text-end= schema.updated_at
-        td.text-end
-          = link_to 'Sync', sync_tables_database_database_schema_path(@database, schema), data: { 'turbo-method': :post }, class: 'btn btn-sm btn-warning'
+    = render @database_schemas
