@@ -74,6 +74,7 @@ end
 
 # database driver
 gem 'mysql2', '~> 0.5'
+gem 'click_house'
 
 gem 'bootstrap'
 gem 'jquery-rails'
