@@ -1,6 +1,6 @@
 .row
   .col-8.h1
-    = link_to @database.name, @database
+    = link_to @database.name, database_path(@database)
     | /
     = link_to @database_schema.name, database_database_schema_path(@database, @database_schema)
     | /
