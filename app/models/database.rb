@@ -21,6 +21,10 @@ class Database < ApplicationRecord
     raise 'not implemented'
   end
 
+  def fetch_all_table(schema_name)
+    raise 'not implemented'
+  end
+
   private
 
   def set_type

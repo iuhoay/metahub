@@ -20,4 +20,11 @@ class Database::ClickHouse < Database
       schema = schemas.find_or_create_by!(name: database)
     end
   end
+
+  def fetch_all_table(schema_name)
+    raise "schema_name is required" if schema_name.blank?
+    get_connection(schema_name).select_all("SELECT name, comment FROM system.tables WHERE database = '#{schema_name}' ").map do |row|
+      { name: row['name'], comment: row['comment'] }
+    end
+  end
 end
