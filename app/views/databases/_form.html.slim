@@ -1,6 +1,6 @@
 = simple_form_for @database do |f|
   .mb-2
-    = f.input :kind
+    = f.input :kind, collection: Database.kinds.keys, include_blank: false
   .mb-2
     = f.input :name
   .mb-2

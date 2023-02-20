@@ -1,6 +1,8 @@
 class Database < ApplicationRecord
   self.table_name = 'connect_databases'
 
+  enum kind: { mysql: 'mysql', click_house: 'click_house' }, _suffix: true
+
   has_many :schemas, class_name: 'DatabaseSchema', foreign_key: 'connect_database_id'
 
   validates :name, presence: true
