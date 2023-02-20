@@ -11,6 +11,8 @@ class Database < ApplicationRecord
   validates :port, presence: true
   validates :username, presence: true
 
+  before_save :set_type
+
   def get_connection(database)
     case kind
     when 'mysql'
@@ -28,5 +30,11 @@ class Database < ApplicationRecord
     conn.query('SHOW DATABASES').each do |row|
       schema = schemas.find_or_create_by!(name: row['Database'])
     end
+  end
+
+  private
+
+  def set_type
+    self.type = "Database::#{kind.camelize}"
   end
 end
