@@ -1,6 +1,6 @@
-= simple_form_for [@database, @database_schema] do |f|
+= simple_form_for [@database, @database_schema], url: database_database_schema_path(@database, @database_schema) do |f|
   .mb-2
-    = f.input :name
+    = f.input :name, readonly: true
   .mb-2
     = f.input :alias_name
   .mb-2
