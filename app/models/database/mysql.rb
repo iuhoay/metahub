@@ -19,4 +19,12 @@ class Database::Mysql < Database
       { name: row['Name'], comment: row['Comment'] }
     end
   end
+
+  def fetch_all_column(schema_name, table_name)
+    raise "schema_name is required" if schema_name.blank?
+    raise "table_name is required" if table_name.blank?
+    get_connection(schema_name).query("SHOW FULL COLUMNS FROM #{table_name}").map do |row|
+      { name: row['Field'], type: row['Type'], comment: row['Comment'], key: row['Key'], nullable: row['Null'], default: row['Default'], extra: row['Extra'] }
+    end
+  end
 end

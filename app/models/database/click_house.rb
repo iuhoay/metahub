@@ -27,4 +27,13 @@ class Database::ClickHouse < Database
       { name: row['name'], comment: row['comment'] }
     end
   end
+
+  def fetch_all_column(schema_name, table_name)
+    raise "schema_name is required" if schema_name.blank?
+    raise "table_name is required" if table_name.blank?
+
+    get_connection(schema_name).select_all("SELECT name, type, comment, default_expression FROM system.columns WHERE database = '#{schema_name}' AND table = '#{table_name}' ").map do |row|
+      { name: row['name'], type: row['type'], comment: row['comment'], key: nil, nullable: nil, default: row['default_expression'], extra: nil }
+    end
+  end
 end
