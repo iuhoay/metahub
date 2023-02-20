@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_08_022943) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_20_074953) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -25,6 +25,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_08_022943) do
     t.integer "port"
     t.string "username"
     t.string "password"
+    t.string "type"
   end
 
   create_table "database_schemas", force: :cascade do |t|

@@ -24,4 +24,14 @@ class DatabaseTest < ActiveSupport::TestCase
     assert database.click_house_kind?
   end
 
+  test "should typeof Database::Mysql" do
+    database = create(:database, kind: :mysql)
+    assert_equal Database::Mysql, database.type.constantize
+  end
+
+  test "should typeof Database::ClickHouse" do
+    database = create(:database, kind: :click_house)
+    assert_equal Database::ClickHouse, database.type.constantize
+  end
+
 end
