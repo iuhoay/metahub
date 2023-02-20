@@ -17,7 +17,8 @@ table.table
       tr
         td= database.name
         td= database.description
-        td= database.kind
+        td
+          span.rounded-pill.badge.text-bg-info= database.kind.camelcase
         td.text-end
           = link_to 'Show', database_path(database), class: 'btn btn-sm btn-primary'
           = link_to 'Edit', edit_database_path(database), class: 'btn btn-sm btn-warning ms-2'
