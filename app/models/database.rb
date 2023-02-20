@@ -14,22 +14,11 @@ class Database < ApplicationRecord
   before_save :set_type
 
   def get_connection(database)
-    case kind
-    when 'mysql'
-      Mysql2::Client.new(host: host, port: port, username: username, password: password, database: database)
-    end
-  end
-
-  def url
-    "#{kind}://#{host}:#{port}"
+    raise 'not implemented'
   end
 
   def sync_schemas
-    conn = Mysql2::Client.new(host: host, port: port, username: username, password: password)
-
-    conn.query('SHOW DATABASES').each do |row|
-      schema = schemas.find_or_create_by!(name: row['Database'])
-    end
+    raise 'not implemented'
   end
 
   private
