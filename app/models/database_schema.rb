@@ -2,6 +2,8 @@ class DatabaseSchema < ApplicationRecord
   belongs_to :database, class_name: 'Database', foreign_key: 'connect_database_id'
   has_many :tables, class_name: 'DatabaseTable', foreign_key: 'database_schema_id'
 
+  validates :name, presence: true
+
   def ods_schema_name
     "#{alias_name || name}"
   end
@@ -11,10 +13,9 @@ class DatabaseSchema < ApplicationRecord
   end
 
   def sync_tables
-    conn = database.get_connection(name)
-    conn.query('SHOW TABLE STATUS').each do |row|
-      table = tables.find_or_initialize_by(name: row['Name'])
-      table.comment = row['Comment']
+    database.fetch_all_table(name).each do |row|
+      table = tables.find_or_initialize_by(name: row[:name])
+      table.comment = row[:comment]
       table.save!
     end
   end

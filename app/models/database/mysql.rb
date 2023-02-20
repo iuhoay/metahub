@@ -12,4 +12,11 @@ class Database::Mysql < Database
       schema = schemas.find_or_create_by!(name: row['Database'])
     end
   end
+
+  def fetch_all_table(schema_name)
+    raise "schema_name is required" if schema_name.blank?
+    get_connection(schema_name).query('SHOW TABLE STATUS').map do |row|
+      { name: row['Name'], comment: row['Comment'] }
+    end
+  end
 end
