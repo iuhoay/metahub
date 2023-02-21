@@ -17,31 +17,29 @@ class TableField < ApplicationRecord
     case data_type_name.downcase
     when 'varchar', 'char', 'text', 'longtext', 'mediumtext', 'tinytext', 'json', 'varbinary', 'longblob', 'mediumblob', 'string'
       'string'
-    when 'int', 'tinyint', 'smallint', 'mediumint', 'bigint', 'uint32', 'uint16'
+    when 'int', 'tinyint', 'smallint', 'mediumint', 'bigint', 'uint32', 'uint16', 'int16', 'int32'
       'bigint'
     when 'decimal', 'double', 'float'
       "decimal(#{data_type_length}, #{data_type_scale})"
     when 'date', 'datetime', 'timestamp'
       'string'
     else
-      raise "Unknown data type: #{data_type}"
+      raise "Unknown data type: #{data_type}, table: #{database_table.name}"
     end
   end
 
   def get_hive_type_on_datax
-    case data_type_name
-    when 'varchar', 'char', 'text', 'longtext', 'mediumtext', 'tinytext', 'json', 'varbinary', 'longblob', 'mediumblob'
+    case data_type_name.downcase
+    when 'varchar', 'char', 'text', 'longtext', 'mediumtext', 'tinytext', 'json', 'varbinary', 'longblob', 'mediumblob', 'string'
       'string'
-    when 'int', 'tinyint', 'smallint'
-      'bigint'
-    when 'mediumint', 'bigint'
+    when 'int', 'tinyint', 'smallint', 'mediumint', 'bigint', 'uint32', 'uint16', 'int16', 'int32'
       'bigint'
     when 'decimal', 'double', 'float'
       "double"
     when 'date', 'datetime', 'timestamp'
       'string'
     else
-      raise "Unknown data type: #{data_type}"
+      raise "Unknown data type: #{data_type}, table: #{database_table.name}"
     end
   end
 
