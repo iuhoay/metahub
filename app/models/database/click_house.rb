@@ -34,6 +34,14 @@ class Database::ClickHouse < Database
 
     get_connection(schema_name).select_all("SELECT name, type, comment, default_expression FROM system.columns WHERE database = '#{schema_name}' AND table = '#{table_name}' ").map do |row|
       { name: row['name'], type: row['type'], comment: row['comment'], key: nil, nullable: nil, default: row['default_expression'], extra: nil }
+        .merge(parse_type(row['type']))
     end
+  end
+
+  private
+
+  def parse_type(type)
+    return { type: "#{$1}", nullable: true } if /Nullable\((.*)\)/ =~ type
+    return { type: type, nullable: false }
   end
 end
