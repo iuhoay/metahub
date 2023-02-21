@@ -30,4 +30,20 @@ class TableFieldTest < ActiveSupport::TestCase
     field.data_type = "decimal(10,2)"
     assert_equal 2, field.data_type_scale
   end
+
+  test 'get_hive_type' do
+    field = TableField.new
+    field.data_type = "int(11)"
+    assert_equal "bigint", field.get_hive_type
+
+    field.data_type = "UInt32"
+    assert_equal "bigint", field.get_hive_type
+
+    field.data_type = "UInt16"
+    assert_equal "bigint", field.get_hive_type
+
+    field.data_type = "String"
+    assert_equal "string", field.get_hive_type
+  end
+
 end
