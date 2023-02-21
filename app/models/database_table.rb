@@ -7,7 +7,7 @@ class DatabaseTable < ApplicationRecord
       table_field = table_fields.find_or_initialize_by(field: field[:name])
       table_field.data_type = field[:type]
       table_field.key = field[:key]
-      table_field.nullable = field[:nullable] == 'YES'
+      table_field.nullable = field[:nullable]
       table_field.default_value = field[:default]
       table_field.field_extra = field[:extra]
       table_field.comment = field[:comment]

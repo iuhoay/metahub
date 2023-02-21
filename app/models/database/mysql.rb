@@ -24,7 +24,7 @@ class Database::Mysql < Database
     raise "schema_name is required" if schema_name.blank?
     raise "table_name is required" if table_name.blank?
     get_connection(schema_name).query("SHOW FULL COLUMNS FROM #{table_name}").map do |row|
-      { name: row['Field'], type: row['Type'], comment: row['Comment'], key: row['Key'], nullable: row['Null'], default: row['Default'], extra: row['Extra'] }
+      { name: row['Field'], type: row['Type'], comment: row['Comment'], key: row['Key'], nullable: row['Null'] == 'YES', default: row['Default'], extra: row['Extra'] }
     end
   end
 end
