@@ -2,6 +2,10 @@ class DatabaseTable < ApplicationRecord
   belongs_to :database_schema, counter_cache: true
   has_many :table_fields, -> { order(position: :asc) }, dependent: :destroy
 
+  def self.ransackable_attributes(auth_object = nil)
+    ["comment", "created_at", "database_schema_id", "id", "name", "updated_at"]
+  end
+
   def sync_fields
     database_schema.database.fetch_all_column(database_schema.name, name).each do |field|
       table_field = table_fields.find_or_initialize_by(field: field[:name])

@@ -5,6 +5,10 @@ class TableField < ApplicationRecord
 
   DATA_TYPE_REGEX = /(?<type>\w+)\(?(?<length>\d+)?,?((?<scale>\d+))?/
 
+  def self.ransackable_attributes(auth_object = nil)
+    ["comment", "created_at", "data_type", "database_table_id", "default_value", "field", "field_extra", "id", "key", "nullable", "position", "updated_at"]
+  end
+
   def to_hive_column
     "`#{to_hive_column_name}` #{get_hive_type}"
   end

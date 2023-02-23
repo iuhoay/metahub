@@ -5,6 +5,11 @@ class DatabaseSchemasController < ApplicationController
     @database_schemas = DatabaseSchema.where.not(pin_at: nil).order(:name)
   end
 
+  def show
+    @q = @database_schema.tables.ransack(params[:q])
+    @tables = @q.result
+  end
+
   def sync_tables
     # @database_schema.sync_tables
     SchemaSyncJob.perform_later(@database_schema)

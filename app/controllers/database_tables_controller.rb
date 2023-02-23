@@ -6,6 +6,11 @@ class DatabaseTablesController < ApplicationController
     redirect_to [@database, @database_schema, @database_table], notice: 'Database table was successfully synced.'
   end
 
+  def show
+    @q = @database_table.table_fields.ransack(params[:q])
+    @table_fields = @q.result
+  end
+
   private
 
   def set_database_table
