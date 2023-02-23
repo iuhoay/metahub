@@ -19,21 +19,37 @@ class DatabaseTable < ApplicationRecord
     "#{database_schema.ods_schema_name}.ods_#{table_name_all_dd}"
   end
 
+  def ods_add_dd_table_name
+    "#{database_schema.ods_schema_name}.ods_#{table_name_add_dd}"
+  end
+
   def generate_sql_script
     dir_path = Rails.root.join('tmp', 'sql_scripts', 'init_ods_db', database_schema.schema_name)
     FileUtils.mkdir_p(dir_path) unless File.exists?(dir_path)
+
     file_path = File.join(dir_path, "ods_#{table_name_all_dd}.sql")
     File.open(file_path, 'w') do |file|
       file.write(create_hive_table_init_script)
+    end
+
+    add_file_path = File.join(dir_path, "ods_#{table_name_add_dd}.sql")
+    File.open(add_file_path, 'w') do |file|
+      file.write(create_hive_add_dd_table_script)
     end
   end
 
   def generate_datax_script
     dir_path = Rails.root.join('tmp', 'sql_scripts', 'data_fetch_outer_source', database_schema.schema_name)
     FileUtils.mkdir_p(dir_path) unless File.exists?(dir_path)
+
     file_path = File.join(dir_path, "ods_#{table_name_all_dd}.json")
     File.open(file_path, 'w') do |file|
       file.write(create_datax_script)
+    end
+
+    add_dd_file_path = File.join(dir_path, "ods_#{table_name_add_dd}.json")
+    File.open(add_dd_file_path, 'w') do |file|
+      file.write(create_datax_script(true))
     end
   end
 
@@ -51,6 +67,14 @@ class DatabaseTable < ApplicationRecord
       "#{database_schema.hive_table_prefix}_#{name}_all_dd"
     else
       "#{name}_all_dd"
+    end
+  end
+
+  def table_name_add_dd
+    if database_schema.hive_table_prefix.present?
+      "#{database_schema.hive_table_prefix}_#{name}_add_dd"
+    else
+      "#{name}_add_dd"
     end
   end
 
@@ -88,6 +112,28 @@ class DatabaseTable < ApplicationRecord
     script
   end
 
+  def create_hive_add_dd_table_script
+    script = "CREATE EXTERNAL TABLE IF NOT EXISTS #{ods_add_dd_table_name}\n"
+    script += "(\n"
+    table_fields.each_with_index do |field, index|
+      script += "  #{field.to_hive_column}"
+      script += " COMMENT '#{field.comment}'" if field.comment.present?
+      if (index + 1) < table_fields.size
+        script += ",\n"
+      else
+        script += "\n)\n"
+      end
+    end
+    script += "COMMENT '#{database_schema.comment_name}#{comment}'\n" if comment.present?
+    script += "PARTITIONED BY (`ds` string comment '分区')\n"
+    script += "ROW FORMAT DELIMITED\n"
+    script += "NULL DEFINED AS \"\"\n"
+    script += "STORED AS ORC\n"
+    script += "LOCATION 'hdfs://qncluster/data/warehouse/tablespace/external/hive/#{database_schema.alias_name}.db/ods_#{table_name_add_dd}'\n"
+    script += 'TBLPROPERTIES ("auto.purge"="true");'
+    script
+  end
+
   def create_hive_table_script
     script = "CREATE TABLE IF NOT EXISTS #{ods_table_name}\n"
     script += "(\n"
@@ -117,7 +163,7 @@ class DatabaseTable < ApplicationRecord
     script
   end
 
-  def create_datax_script
+  def create_datax_script(is_add_dd=false)
     json_builder = Jbuilder.new do |json|
       json.job do
         json.setting do
@@ -137,7 +183,8 @@ class DatabaseTable < ApplicationRecord
                 json.username("${username}")
                 json.password("${password}")
                 json.column(table_fields.map(&:field))
-                json.where("create_time < '${curr_datetime}'")
+                json.where("create_time < '${curr_datetime}'") unless is_add_dd
+                json.where("create_time = '${yesterday_short}'") if is_add_dd
                 json.connection do
                   json.child! do
                     json.table([name])
@@ -160,8 +207,8 @@ class DatabaseTable < ApplicationRecord
                 end
                 json.fileType('orc')
                 json.path("${hive_default_data_dir}/#{database_schema.ods_schema_name}.db/#{name}/ds=${yesterday}")
-                json.path("/data/warehouse/tablespace/external/hive/#{database_schema.alias_name}.db/ods_#{table_name_all_dd}/ds=${yesterday}")
-                json.fileName("#{database_schema.ods_schema_name}-ods_#{table_name_all_dd}")
+                json.path("/data/warehouse/tablespace/external/hive/#{database_schema.alias_name}.db/ods_#{is_add_dd ? table_name_add_dd : table_name_all_dd}/ds=${yesterday}")
+                json.fileName("#{database_schema.ods_schema_name}-ods_#{is_add_dd ? table_name_add_dd : table_name_all_dd}")
                 json.writeMode('append')
                 json.fieldDelimiter("\u0001")
                 json.column table_fields do |field|
