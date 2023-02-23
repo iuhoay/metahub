@@ -3,7 +3,7 @@ class DatabaseTablesController < ApplicationController
 
   def sync_fields
     @database_table.sync_fields
-    redirect_to [@database, @database_schema, @database_table], notice: 'Database table was successfully synced.'
+    redirect_to database_database_schema_database_table_path(@database, @database_schema, @database_table), notice: 'Database table was successfully synced.'
   end
 
   def show
