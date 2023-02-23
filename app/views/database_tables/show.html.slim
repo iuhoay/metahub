@@ -19,9 +19,9 @@ table.table
       th Default
       th Comment
       th.text-end Created At
-      th.text-end Latest Update
+      th.text-end= sort_link(@q, :updated_at, 'Latest Update', default_order: :desc)
   tbody
-    - @database_table.table_fields.each do |field|
+    - @table_fields.each do |field|
       tr
         td
           // TODO: Modify position

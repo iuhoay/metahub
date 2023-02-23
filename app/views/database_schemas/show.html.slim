@@ -19,10 +19,10 @@ table.table
       th Table
       th Comment
       th.text-end Created At
-      th.text-end Latest Update
+      th.text-end= sort_link(@q, :updated_at, 'Latest Update', default_order: :desc)
       th.text-end Actions
   tbody
-    - @database_schema.tables.each do |table|
+    - @tables.each do |table|
       tr
         td= link_to table.name, database_database_schema_database_table_path(@database, @database_schema, table)
         td= table.comment
