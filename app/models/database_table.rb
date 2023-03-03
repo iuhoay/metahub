@@ -29,7 +29,7 @@ class DatabaseTable < ApplicationRecord
 
   def generate_sql_script
     dir_path = Rails.root.join('tmp', 'sql_scripts', 'init_ods_db', database_schema.schema_name)
-    FileUtils.mkdir_p(dir_path) unless File.exists?(dir_path)
+    FileUtils.mkdir_p(dir_path) unless File.exist?(dir_path)
 
     file_path = File.join(dir_path, "ods_#{table_name_all_dd}.sql")
     File.open(file_path, 'w') do |file|
@@ -44,7 +44,7 @@ class DatabaseTable < ApplicationRecord
 
   def generate_datax_script
     dir_path = Rails.root.join('tmp', 'sql_scripts', 'data_fetch_outer_source', database_schema.schema_name)
-    FileUtils.mkdir_p(dir_path) unless File.exists?(dir_path)
+    FileUtils.mkdir_p(dir_path) unless File.exist?(dir_path)
 
     file_path = File.join(dir_path, "ods_#{table_name_all_dd}.json")
     File.open(file_path, 'w') do |file|
@@ -59,7 +59,7 @@ class DatabaseTable < ApplicationRecord
 
   def generate_dwd_job
     dir_path = Rails.root.join('tmp', 'sql_scripts', 'dwd_job', database_schema.schema_name)
-    FileUtils.mkdir_p(dir_path) unless File.exists?(dir_path)
+    FileUtils.mkdir_p(dir_path) unless File.exist?(dir_path)
     file_path = File.join(dir_path, "dwd_#{table_name_all_dd}.job")
     File.open(file_path, 'w') do |file|
       file.write(create_dwd_job_file)
