@@ -28,42 +28,32 @@ class DatabaseTable < ApplicationRecord
   end
 
   def generate_sql_script
-    dir_path = Rails.root.join('tmp', 'sql_scripts', 'init_ods_db', database_schema.schema_name)
+    dir_path = Rails.root.join("tmp", "sql_scripts", "init_ods_db", database_schema.schema_name)
     FileUtils.mkdir_p(dir_path) unless File.exist?(dir_path)
 
     file_path = File.join(dir_path, "ods_#{table_name_all_dd}.sql")
-    File.open(file_path, 'w') do |file|
-      file.write(create_hive_table_init_script)
-    end
+    File.write(file_path, create_hive_table_init_script)
 
     add_file_path = File.join(dir_path, "ods_#{table_name_add_dd}.sql")
-    File.open(add_file_path, 'w') do |file|
-      file.write(create_hive_add_dd_table_script)
-    end
+    File.write(add_file_path, create_hive_add_dd_table_script)
   end
 
   def generate_datax_script
-    dir_path = Rails.root.join('tmp', 'sql_scripts', 'data_fetch_outer_source', database_schema.schema_name)
+    dir_path = Rails.root.join("tmp", "sql_scripts", "data_fetch_outer_source", database_schema.schema_name)
     FileUtils.mkdir_p(dir_path) unless File.exist?(dir_path)
 
     file_path = File.join(dir_path, "ods_#{table_name_all_dd}.json")
-    File.open(file_path, 'w') do |file|
-      file.write(create_datax_script)
-    end
+    File.write(file_path, create_datax_script)
 
     add_dd_file_path = File.join(dir_path, "ods_#{table_name_add_dd}.json")
-    File.open(add_dd_file_path, 'w') do |file|
-      file.write(create_datax_script(true))
-    end
+    File.write(add_dd_file_path, create_datax_script(true))
   end
 
   def generate_dwd_job
-    dir_path = Rails.root.join('tmp', 'sql_scripts', 'dwd_job', database_schema.schema_name)
+    dir_path = Rails.root.join("tmp", "sql_scripts", "dwd_job", database_schema.schema_name)
     FileUtils.mkdir_p(dir_path) unless File.exist?(dir_path)
     file_path = File.join(dir_path, "dwd_#{table_name_all_dd}.job")
-    File.open(file_path, 'w') do |file|
-      file.write(create_dwd_job_file)
-    end
+    File.write(file_path, create_dwd_job_file)
   end
 
   def table_name_all_dd
@@ -100,10 +90,10 @@ class DatabaseTable < ApplicationRecord
     table_fields.each_with_index do |field, index|
       script += "  #{field.to_hive_column}"
       script += " COMMENT '#{field.comment}'" if field.comment.present?
-      if (index + 1) < table_fields.size
-        script += ",\n"
+      script += if (index + 1) < table_fields.size
+        ",\n"
       else
-        script += "\n)\n"
+        "\n)\n"
       end
     end
     script += "COMMENT '#{database_schema.comment_name}#{comment}'\n" if comment.present?
@@ -122,10 +112,10 @@ class DatabaseTable < ApplicationRecord
     table_fields.each_with_index do |field, index|
       script += "  #{field.to_hive_column}"
       script += " COMMENT '#{field.comment}'" if field.comment.present?
-      if (index + 1) < table_fields.size
-        script += ",\n"
+      script += if (index + 1) < table_fields.size
+        ",\n"
       else
-        script += "\n)\n"
+        "\n)\n"
       end
     end
     script += "COMMENT '#{database_schema.comment_name}#{comment}'\n" if comment.present?
@@ -158,16 +148,16 @@ class DatabaseTable < ApplicationRecord
     table_fields.each_with_index do |field, index|
       script += "        #{field.to_hive_column}"
       script += " COMMENT '#{field.comment}'" if field.comment.present?
-      if (index + 1) < table_fields.size
-        script += ",\n"
+      script += if (index + 1) < table_fields.size
+        ",\n"
       else
-        script += ");"
+        ");"
       end
     end
     script
   end
 
-  def create_datax_script(is_add_dd=false)
+  def create_datax_script(is_add_dd = false)
     json_builder = Jbuilder.new do |json|
       json.job do
         json.setting do
@@ -182,7 +172,7 @@ class DatabaseTable < ApplicationRecord
         json.content do
           json.child! do
             json.reader do
-              json.name('mysqlreader')
+              json.name("mysqlreader")
               json.parameter do
                 json.username("${username}")
                 json.password("${password}")
@@ -192,28 +182,28 @@ class DatabaseTable < ApplicationRecord
                 json.connection do
                   json.child! do
                     json.table([name])
-                    json.jdbcUrl(['jdbc:mysql://${src_db_ip}:${src_db_port}/${src_db_name}?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false&useSSL=false'])
+                    json.jdbcUrl(["jdbc:mysql://${src_db_ip}:${src_db_port}/${src_db_name}?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false&useSSL=false"])
                   end
                 end
-                json.splitPk('id')
+                json.splitPk("id")
               end
             end
             json.writer do
-              json.name('hdfswriter')
+              json.name("hdfswriter")
               json.parameter do
                 json.defaultFS("hdfs://nameservice1")
                 json.hadoopConfig do
-                  json.set! 'dfs.nameservices', 'nameservice1'
-                  json.set! 'dfs.ha.namenodes.nameservice1', 'namenode1,namenode2'
-                  json.set! 'dfs.namenode.rpc-address.nameservice1.namenode1', 'hadoop-master-001:8020'
-                  json.set! 'dfs.namenode.rpc-address.nameservice1.namenode2', 'hadoop-master-002:8020'
-                  json.set! 'dfs.client.failover.proxy.provider.nameservice1', 'org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider'
+                  json.set! "dfs.nameservices", "nameservice1"
+                  json.set! "dfs.ha.namenodes.nameservice1", "namenode1,namenode2"
+                  json.set! "dfs.namenode.rpc-address.nameservice1.namenode1", "hadoop-master-001:8020"
+                  json.set! "dfs.namenode.rpc-address.nameservice1.namenode2", "hadoop-master-002:8020"
+                  json.set! "dfs.client.failover.proxy.provider.nameservice1", "org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"
                 end
-                json.fileType('orc')
+                json.fileType("orc")
                 json.path("${hive_default_data_dir}/#{database_schema.ods_schema_name}.db/#{name}/ds=${yesterday}")
                 json.path("/data/warehouse/tablespace/external/hive/#{database_schema.alias_name}.db/ods_#{is_add_dd ? table_name_add_dd : table_name_all_dd}/ds=${yesterday}")
                 json.fileName("#{database_schema.ods_schema_name}-ods_#{is_add_dd ? table_name_add_dd : table_name_all_dd}")
-                json.writeMode('append')
+                json.writeMode("append")
                 json.fieldDelimiter("\u0001")
                 json.column table_fields do |field|
                   json.name(field.to_hive_column_name)

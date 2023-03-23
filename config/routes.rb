@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  root 'database_schemas#index'
+  root "database_schemas#index"
 
   resources :databases do
     resources :database_schemas do
@@ -19,7 +19,7 @@ Rails.application.routes.draw do
     end
 
     member do
-      post 'sync_schemas'
+      post "sync_schemas"
     end
   end
 
