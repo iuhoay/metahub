@@ -19,14 +19,14 @@ class TableField < ApplicationRecord
 
   def get_hive_type
     case data_type_name.downcase
-    when 'varchar', 'char', 'text', 'longtext', 'mediumtext', 'tinytext', 'json', 'varbinary', 'longblob', 'mediumblob', 'string'
-      'string'
-    when 'int', 'tinyint', 'smallint', 'mediumint', 'bigint', 'uint32', 'uint16', 'int16', 'int32'
-      'bigint'
-    when 'decimal', 'double', 'float'
+    when "varchar", "char", "text", "longtext", "mediumtext", "tinytext", "json", "varbinary", "longblob", "mediumblob", "string"
+      "string"
+    when "int", "tinyint", "smallint", "mediumint", "bigint", "uint32", "uint16", "int16", "int32"
+      "bigint"
+    when "decimal", "double", "float"
       "decimal(#{data_type_length}, #{data_type_scale})"
-    when 'date', 'datetime', 'timestamp'
-      'string'
+    when "date", "datetime", "timestamp"
+      "string"
     else
       raise "Unknown data type: #{data_type}, table: #{database_table.name}"
     end
@@ -34,14 +34,14 @@ class TableField < ApplicationRecord
 
   def get_hive_type_on_datax
     case data_type_name.downcase
-    when 'varchar', 'char', 'text', 'longtext', 'mediumtext', 'tinytext', 'json', 'varbinary', 'longblob', 'mediumblob', 'string'
-      'string'
-    when 'int', 'tinyint', 'smallint', 'mediumint', 'bigint', 'uint32', 'uint16', 'int16', 'int32'
-      'bigint'
-    when 'decimal', 'double', 'float'
+    when "varchar", "char", "text", "longtext", "mediumtext", "tinytext", "json", "varbinary", "longblob", "mediumblob", "string"
+      "string"
+    when "int", "tinyint", "smallint", "mediumint", "bigint", "uint32", "uint16", "int16", "int32"
+      "bigint"
+    when "decimal", "double", "float"
       "double"
-    when 'date', 'datetime', 'timestamp'
-      'string'
+    when "date", "datetime", "timestamp"
+      "string"
     else
       raise "Unknown data type: #{data_type}, table: #{database_table.name}"
     end
@@ -55,8 +55,6 @@ class TableField < ApplicationRecord
     match = data_type.match(DATA_TYPE_REGEX)
     if match && match[:length]
       match[:length].to_i
-    else
-      nil
     end
   end
 
@@ -64,8 +62,6 @@ class TableField < ApplicationRecord
     match = data_type.match(DATA_TYPE_REGEX)
     if match && match[:scale]
       match[:scale].to_i
-    else
-      nil
     end
   end
 end

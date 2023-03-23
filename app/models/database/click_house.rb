@@ -1,6 +1,5 @@
 class Database::ClickHouse < Database
-
-  def get_connection(database=nil)
+  def get_connection(database = nil)
     ::ClickHouse::Connection.new(::ClickHouse::Config.new(
       logger: Rails.logger,
       host: host,
@@ -24,7 +23,7 @@ class Database::ClickHouse < Database
   def fetch_all_table(schema_name)
     raise "schema_name is required" if schema_name.blank?
     get_connection(schema_name).select_all("SELECT name, comment FROM system.tables WHERE database = '#{schema_name}' ").map do |row|
-      { name: row['name'], comment: row['comment'] }
+      {name: row["name"], comment: row["comment"]}
     end
   end
 
@@ -33,15 +32,15 @@ class Database::ClickHouse < Database
     raise "table_name is required" if table_name.blank?
 
     get_connection(schema_name).select_all("SELECT name, type, comment, default_expression FROM system.columns WHERE database = '#{schema_name}' AND table = '#{table_name}' ").map do |row|
-      { name: row['name'], type: row['type'], comment: row['comment'], key: nil, nullable: nil, default: row['default_expression'], extra: nil }
-        .merge(parse_type(row['type']))
+      {name: row["name"], type: row["type"], comment: row["comment"], key: nil, nullable: nil, default: row["default_expression"], extra: nil}
+        .merge(parse_type(row["type"]))
     end
   end
 
   private
 
   def parse_type(type)
-    return { type: "#{$1}", nullable: true } if /Nullable\((.*)\)/ =~ type
-    return { type: type, nullable: false }
+    return {type: $1.to_s, nullable: true} if /Nullable\((.*)\)/ =~ type
+    {type: type, nullable: false}
   end
 end

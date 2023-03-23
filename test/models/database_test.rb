@@ -1,7 +1,6 @@
 require "test_helper"
 
 class DatabaseTest < ActiveSupport::TestCase
-
   test "should saved" do
     database = build(:database)
     assert database.save
@@ -33,5 +32,4 @@ class DatabaseTest < ActiveSupport::TestCase
     database = create(:database, kind: :click_house)
     assert_equal Database::ClickHouse, database.type.constantize
   end
-
 end
