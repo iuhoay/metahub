@@ -1,6 +1,13 @@
 require "test_helper"
 
 class TableFieldTest < ActiveSupport::TestCase
+  test "data_type_name with enum" do
+    field = TableField.new
+    field.data_type = "enum('a','b')"
+    assert_equal "enum", field.data_type_name
+    assert_equal "string", field.get_hive_type
+  end
+
   test "data_type_name" do
     field = TableField.new
     field.data_type = "int(11)"
@@ -43,6 +50,9 @@ class TableFieldTest < ActiveSupport::TestCase
     assert_equal "bigint", field.get_hive_type
 
     field.data_type = "String"
+    assert_equal "string", field.get_hive_type
+
+    field.data_type = "enum('manager', 'customer')"
     assert_equal "string", field.get_hive_type
   end
 end

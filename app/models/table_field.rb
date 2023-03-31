@@ -4,6 +4,7 @@ class TableField < ApplicationRecord
   acts_as_list scope: :database_table
 
   DATA_TYPE_REGEX = /(?<type>\w+)\(?(?<length>\d+)?,?((?<scale>\d+))?/
+  DATA_TYPE_NAME_REGEX = /(\w+)(\(.+\))?/
 
   def self.ransackable_attributes(auth_object = nil)
     ["comment", "created_at", "data_type", "database_table_id", "default_value", "field", "field_extra", "id", "key", "nullable", "position", "updated_at"]
@@ -19,13 +20,13 @@ class TableField < ApplicationRecord
 
   def get_hive_type
     case data_type_name.downcase
-    when "varchar", "char", "text", "longtext", "mediumtext", "tinytext", "json", "varbinary", "longblob", "mediumblob", "string"
+    when "varchar", "char", "text", "longtext", "mediumtext", "tinytext", "json", "varbinary", "longblob", "mediumblob", "string", "enum", "set", "year"
       "string"
     when "int", "tinyint", "smallint", "mediumint", "bigint", "uint32", "uint16", "int16", "int32"
       "bigint"
     when "decimal", "double", "float"
       "decimal(#{data_type_length}, #{data_type_scale})"
-    when "date", "datetime", "timestamp"
+    when "date", "datetime", "timestamp", "time"
       "string"
     else
       raise "Unknown data type: #{data_type}, table: #{database_table.name}"
@@ -34,13 +35,13 @@ class TableField < ApplicationRecord
 
   def get_hive_type_on_datax
     case data_type_name.downcase
-    when "varchar", "char", "text", "longtext", "mediumtext", "tinytext", "json", "varbinary", "longblob", "mediumblob", "string"
+    when "varchar", "char", "text", "longtext", "mediumtext", "tinytext", "json", "varbinary", "longblob", "mediumblob", "string", "enum", "set", "year"
       "string"
     when "int", "tinyint", "smallint", "mediumint", "bigint", "uint32", "uint16", "int16", "int32"
       "bigint"
     when "decimal", "double", "float"
       "double"
-    when "date", "datetime", "timestamp"
+    when "date", "datetime", "timestamp", "time"
       "string"
     else
       raise "Unknown data type: #{data_type}, table: #{database_table.name}"
@@ -48,7 +49,7 @@ class TableField < ApplicationRecord
   end
 
   def data_type_name
-    data_type.match(DATA_TYPE_REGEX)[:type]
+    data_type.match(DATA_TYPE_NAME_REGEX).try(:[], 1)
   end
 
   def data_type_length
