@@ -90,3 +90,5 @@ gem "ransack", "~> 4.0"
 
 gem "sentry-ruby"
 gem "sentry-rails"
+
+gem "devise", "~> 4.9"
