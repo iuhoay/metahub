@@ -13,7 +13,10 @@
   <body>
     <%= render "layouts/navbar" %>
 
-    <%= flash_messages %>
+    <div id="flash" class="fixed-top container mt-4">
+      <%= render "layouts/flash" %>
+    </div>
+
     <div id="wrapper" class="container">
       <%= yield %>
     </div>
