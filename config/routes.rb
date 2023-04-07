@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  devise_for :users
+
   root "database_schemas#index"
 
   resources :databases do
