@@ -1,5 +1,5 @@
 class DatabaseTablesController < ApplicationController
-  before_action :set_database_table, only: [:show, :edit, :update, :destroy, :sync_fields]
+  before_action :set_database_table, only: [:show, :sync_fields]
 
   def sync_fields
     @database_table.sync_fields
@@ -16,6 +16,6 @@ class DatabaseTablesController < ApplicationController
   def set_database_table
     @database_table = DatabaseTable.find(params[:id])
     @database_schema = @database_table.database_schema
-    @database = @database_schema.database
+    @database = @database_table.database
   end
 end

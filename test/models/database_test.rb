@@ -32,4 +32,9 @@ class DatabaseTest < ActiveSupport::TestCase
     database = create(:database, kind: :click_house)
     assert_equal Database::ClickHouse, database.type.constantize
   end
+
+  test "should database become Database" do
+    database = create(:database, kind: :mysql)
+    assert_equal Database, database.become.class
+  end
 end

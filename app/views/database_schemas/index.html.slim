@@ -1,6 +1,5 @@
-.row.mb-2.text-end
-  .col-12
-    = link_to 'All Database', databases_path, class: 'btn btn-link'
+= content_for :page_actions do
+  = link_to 'All Database', databases_path, class: 'btn btn-link'
 
 table.table
   thead

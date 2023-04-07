@@ -1,10 +1,6 @@
-.row.mb-2
-  .col-6.h1
-    = link_to 'Metahub', root_path
-    | /
-    = @database.name
-  .col-6.text-end
-    = link_to 'Sync', sync_schemas_database_path(@database), data: { 'turbo-method': :post }, class: 'btn btn-link btn-warning'
+= content_for :page_title, @database.name
+= content_for :page_actions do
+  = link_to 'Sync', sync_schemas_database_path(@database), data: { 'turbo-method': :post }, class: 'btn btn-link btn-warning'
 
 table.table
   thead
