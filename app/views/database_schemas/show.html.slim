@@ -1,17 +1,16 @@
-.row
-  .col-6.h1
-    = link_to @database.name, database_path(@database)
-    | /
-    = @database_schema.name
-  .col-6.text-end
-    - if @database_schema.pin_at
-      = link_to icon('fa-solid', 'user-secret', class: 'fa-7x, fa-shake'), unpin_database_database_schema_path(@database, @database_schema), data: { 'turbo-method': :delete }, class: 'btn text-danger'
-    - else
-      = link_to icon('fa-solid', 'user-secret', class: 'fa-7x, fa-shake'), pin_database_database_schema_path(@database, @database_schema), data: { 'turbo-method': :post }, class: 'btn'
+= content_for :page_title do
+  - if @database_schema.pin_at
+    = link_to icon('fa-solid', 'star'), unpin_database_database_schema_path(@database, @database_schema), data: { 'turbo-method': :delete }, class: 'fs-3 text-warning'
+  - else
+    = link_to icon('fa-regular', 'star'), pin_database_database_schema_path(@database, @database_schema), data: { 'turbo-method': :post }, class: 'fs-3 text-secondary'
+  = link_to @database.name, database_path(@database)
+  | /
+  = @database_schema.name
 
-    = link_to 'Edit', edit_database_database_schema_path(@database, @database_schema), class: 'btn btn-link btn-warning'
-    = link_to 'Sync', sync_tables_database_database_schema_path(@database), data: { 'turbo-method': :post }, class: 'btn btn-link btn-warning'
-    = link_to 'Export Hive', export_hive_database_database_schema_path(@database), data: { 'turbo-method': :post }, class: 'btn btn-link btn-warning'
+= content_for :page_actions do
+  = link_to 'Edit', edit_database_database_schema_path(@database, @database_schema)
+  = link_to 'Sync', sync_tables_database_database_schema_path(@database), data: { 'turbo-method': :post }
+  = link_to 'Export Hive', export_hive_database_database_schema_path(@database), data: { 'turbo-method': :post }
 
 table.table
   thread

@@ -18,6 +18,10 @@
     </div>
 
     <div id="wrapper" class="container">
+      <% if yield(:page_title).present? || yield(:page_actions).present? %>
+        <%= render "layouts/page_header" %>
+      <% end %>
+
       <%= yield %>
     </div>
   </body>

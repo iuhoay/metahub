@@ -13,6 +13,10 @@ class Database < ApplicationRecord
 
   before_save :set_type
 
+  def become
+    becomes(Database)
+  end
+
   def get_connection(database)
     raise "not implemented"
   end
