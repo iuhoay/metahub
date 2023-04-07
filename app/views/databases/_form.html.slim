@@ -1,17 +1,12 @@
-= simple_form_for @database do |f|
-  .mb-2
-    = f.input :kind, collection: Database.kinds.keys, include_blank: false
-  .mb-2
-    = f.input :name
-  .mb-2
-    = f.input :description
-  .mb-2
-    = f.input :host
-  .mb-2
-    = f.input :port
-  .mb-2
-    = f.input :username
-  .mb-2
-    = f.input :password
-  .mb-2
+= simple_form_for @database.becomes(Database) do |f|
+  = f.input :kind, collection: Database.kinds.keys, include_blank: false
+  = f.input :name
+  = f.input :description
+  = f.input :host
+  = f.input :port
+  = f.input :username
+  = f.input :password
+
+  .actions.mt-2
     = f.submit 'Save', class: 'btn btn-primary'
+    = link_to 'Back', databases_path, class: 'btn btn-secondary ms-2'

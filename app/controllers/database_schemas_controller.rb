@@ -2,7 +2,7 @@ class DatabaseSchemasController < ApplicationController
   before_action :set_database_schema, only: [:show, :edit, :update, :destroy, :sync_tables, :pin, :unpin, :export_hive]
 
   def index
-    @database_schemas = DatabaseSchema.where.not(pin_at: nil).order(:name)
+    @database_schemas = DatabaseSchema.includes(:database).pinned.order(:name)
   end
 
   def show

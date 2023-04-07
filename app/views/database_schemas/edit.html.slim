@@ -1,3 +1,9 @@
+.row.mb-2
+  .col-6
+    h1
+      = @database_schema.name
+  .col-6
+
 = simple_form_for [@database, @database_schema], url: database_database_schema_path(@database, @database_schema) do |f|
   .mb-2
     = f.input :name, readonly: true
@@ -9,3 +15,4 @@
     = f.input :comment_name
   .mb-2
     = f.submit 'Save', class: 'btn btn-primary'
+    = link_to 'Back', database_database_schemas_path(@database), class: 'btn btn-secondary ms-2'

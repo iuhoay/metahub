@@ -4,6 +4,8 @@ class DatabaseSchema < ApplicationRecord
 
   validates :name, presence: true
 
+  scope :pinned, -> { where.not(pin_at: nil) }
+
   def ods_schema_name
     (alias_name || name).to_s
   end
