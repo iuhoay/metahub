@@ -4,11 +4,14 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = [ "times" ]
 
+  static values = {
+    timer: { type: Number, default: 5 }
+  }
+
   connect() {
-    let times = 30
     const timer = setInterval(() => {
-      this.timesTarget.textContent = `${times -= 1}s`
-      if (times == 0) {
+      this.timesTarget.textContent = `${this.timerValue -= 1}s`
+      if (this.timerValue == 0) {
         this.remove()
         clearInterval(timer)
       }

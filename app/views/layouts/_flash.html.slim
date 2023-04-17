@@ -5,7 +5,7 @@
   - when 'alert'
     - 'alert-danger'
 
-  .alert.d-flex.justify-content-between data-controller="removals" data-action="click->removals#remove" class="#{flash_class}" role="alert" style="cursor: pointer;"
+  .alert.d-flex.justify-content-between data-controller="removals" data-action="click->removals#remove" class="#{flash_class}" role="alert" style="cursor: pointer;" data-removals-timer-value="15"
     = message
     .close
       span aria-hidden="true" data-removals-target="times" &times;
