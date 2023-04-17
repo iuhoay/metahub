@@ -12,16 +12,11 @@
 
   <body>
     <%= render "layouts/navbar" %>
-
-    <div id="flash" class="fixed-top container mt-4">
-      <%= render "layouts/flash" %>
-    </div>
-
     <div id="wrapper" class="container">
+      <%= render "layouts/flash" %>
       <% if yield(:page_title).present? || yield(:page_actions).present? %>
         <%= render "layouts/page_header" %>
       <% end %>
-
       <%= yield %>
     </div>
   </body>

@@ -1,7 +1,12 @@
 - flash.each do |flash_type, message|
-  - if flash_type == 'alert'
-    .alert.alert-danger data-controller="removals" data-action="click->removals#remove"
-      = message
-  - else
-    .alert.alert-success data-controller="removals" data-action="click->removals#remove"
-      = message
+  - flash_class = case flash_type
+  - when 'notice'
+    - 'alert-success'
+  - when 'alert'
+    - 'alert-danger'
+
+  .alert.d-flex.justify-content-between data-controller="removals" data-action="click->removals#remove" class="#{flash_class}" role="alert" style="cursor: pointer;"
+    = message
+    .close
+      span aria-hidden="true" data-removals-target="times" &times;
+      span.sr-only Close
