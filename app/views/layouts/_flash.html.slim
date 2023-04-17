@@ -1,3 +1,7 @@
 - flash.each do |flash_type, message|
-  .alert.alert-success data-controller="removals" data-action="click->removals#remove"
-    = message
+  - if flash_type == 'alert'
+    .alert.alert-danger data-controller="removals" data-action="click->removals#remove"
+      = message
+  - else
+    .alert.alert-success data-controller="removals" data-action="click->removals#remove"
+      = message

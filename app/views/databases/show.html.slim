@@ -1,6 +1,7 @@
 = content_for :page_title, @database.name
 = content_for :page_actions do
-  = link_to 'Sync', sync_schemas_database_path(@database), data: { 'turbo-method': :post }, class: 'btn btn-link btn-warning'
+  - if policy(@database.become).sync_schemas?
+    = link_to 'Sync', sync_schemas_database_path(@database), data: { 'turbo-method': :post }, class: 'btn btn-link btn-warning'
 
 table.table
   thead

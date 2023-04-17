@@ -17,5 +17,6 @@ class DatabaseTablesController < ApplicationController
     @database_table = DatabaseTable.find(params[:id])
     @database_schema = @database_table.database_schema
     @database = @database_table.database
+    authorize @database_table
   end
 end

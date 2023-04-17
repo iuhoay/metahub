@@ -8,9 +8,11 @@
   = @database_schema.name
 
 = content_for :page_actions do
-  = link_to 'Edit', edit_database_database_schema_path(@database, @database_schema)
-  = link_to 'Sync', sync_tables_database_database_schema_path(@database), data: { 'turbo-method': :post }
-  = link_to 'Export Hive', export_hive_database_database_schema_path(@database), data: { 'turbo-method': :post }
+  - if policy(@database_schema).update?
+    = link_to 'Edit', edit_database_database_schema_path(@database, @database_schema)
+    = link_to 'Sync', sync_tables_database_database_schema_path(@database), data: { 'turbo-method': :post }
+  - if policy(@database_schema).export_hive?
+    = link_to 'Export Hive', export_hive_database_database_schema_path(@database), data: { 'turbo-method': :post }
 
 table.table
   thread
@@ -28,4 +30,5 @@ table.table
         td.text-end= table.created_at
         td.text-end= table.updated_at
         td.text-end
-          = link_to 'Sync', sync_fields_database_database_schema_database_table_path(@database, @database_schema, table), data: { 'turbo-method': :post }, class: 'btn btn-sm btn-warning'
+          - if policy(table).update?
+            = link_to 'Sync', sync_fields_database_database_schema_database_table_path(@database, @database_schema, table), data: { 'turbo-method': :post }, class: 'btn btn-sm btn-warning'
