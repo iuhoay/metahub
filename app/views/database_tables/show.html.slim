@@ -6,7 +6,8 @@
   = @database_table.name
 
 = content_for :page_actions do
-  = link_to 'Sync', [:sync_fields, @database.become, @database_schema, @database_table], data: { 'turbo-method': :post, 'turbo-disable_with': 'loading...' }, class: 'btn btn-link btn-warning'
+  - if policy(@database_table).update?
+    = link_to 'Sync', [:sync_fields, @database.become, @database_schema, @database_table], data: { 'turbo-method': :post, 'turbo-disable_with': 'loading...' }, class: 'btn btn-link btn-warning'
 
 table.table
   thread

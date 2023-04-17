@@ -1,5 +1,5 @@
 = content_for :page_actions do
-  = link_to 'All Database', databases_path, class: 'btn btn-link'
+  = link_to 'All Database', databases_path, class: 'btn btn-link' if policy(Database).index?
 
 table.table
   thead
@@ -19,5 +19,6 @@ table.table
         td= link_to schema.database_tables_count || 'not sync', database_database_schema_path(schema.database, schema)
         td.text-end= schema.updated_at
         td.text-end
-          = link_to 'Sync', sync_tables_database_database_schema_path(schema.database, schema), data: { 'turbo-method': :post }, class: 'btn btn-sm btn-warning'
-          = link_to 'Edit', edit_database_database_schema_path(schema.database, schema), class: 'btn btn-sm btn-primary ms-2'
+          - if policy(schema).update?
+            = link_to 'Sync', sync_tables_database_database_schema_path(schema.database, schema), data: { 'turbo-method': :post }, class: 'btn btn-sm btn-warning'
+            = link_to 'Edit', edit_database_database_schema_path(schema.database, schema), class: 'btn btn-sm btn-primary ms-2'

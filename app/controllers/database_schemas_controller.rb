@@ -2,6 +2,7 @@ class DatabaseSchemasController < ApplicationController
   before_action :set_database_schema, only: [:show, :edit, :update, :destroy, :sync_tables, :pin, :unpin, :export_hive]
 
   def index
+    authorize DatabaseSchema
     @database_schemas = DatabaseSchema.includes(:database).pinned.order(:name)
   end
 
@@ -44,6 +45,7 @@ class DatabaseSchemasController < ApplicationController
   def set_database_schema
     @database_schema = DatabaseSchema.find(params[:id])
     @database = @database_schema.database
+    authorize @database_schema
   end
 
   def database_schema_params

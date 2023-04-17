@@ -2,20 +2,26 @@ class DatabasesController < ApplicationController
   before_action :set_database, only: [:show, :edit, :update, :destroy, :sync_schemas]
 
   def index
-    @databases = Database.all
+    authorize Database
+    @databases = policy_scope(Database)
   end
 
   def new
+    authorize Database
     @database = Database.new
   end
 
   def create
+    authorize Database
     @database = Database.new(database_params)
     if @database.save
       redirect_to databases_path
     else
       render :new, status: :unprocessable_entity
     end
+  end
+
+  def edit
   end
 
   def update
@@ -43,5 +49,6 @@ class DatabasesController < ApplicationController
 
   def set_database
     @database = Database.find(params[:id])
+    authorize @database.become
   end
 end

@@ -92,3 +92,5 @@ gem "sentry-ruby"
 gem "sentry-rails"
 
 gem "devise", "~> 4.9"
+
+gem "pundit", "~> 2.3"
