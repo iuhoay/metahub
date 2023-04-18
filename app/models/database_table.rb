@@ -74,6 +74,14 @@ class DatabaseTable < ApplicationRecord
     end
   end
 
+  def ddl
+    create_hive_table_init_script
+  end
+
+  def datax
+    create_datax_script
+  end
+
   private
 
   def create_dwd_job_file

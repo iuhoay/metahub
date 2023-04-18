@@ -77,7 +77,7 @@ end
 gem "mysql2", "~> 0.5"
 gem "click_house"
 
-gem "bootstrap"
+gem "bootstrap", "~> 5.3.0.alpha3"
 gem "jquery-rails"
 gem "simple_form"
 gem "slim-rails"
