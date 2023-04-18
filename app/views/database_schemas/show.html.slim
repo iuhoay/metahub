@@ -1,8 +1,15 @@
 = content_for :page_title do
-  - if @database_schema.pin_at
-    = link_to icon('fa-solid', 'star'), unpin_database_database_schema_path(@database, @database_schema), data: { 'turbo-method': :delete }, class: 'fs-3 text-warning'
+  - if policy(@database_schema).pin?
+    - if @database_schema.pin_at
+      = link_to icon('fa-solid', 'star'), [:unpin, @database.become, @database_schema], data: { 'turbo-method': :delete }, class: 'fs-3 text-warning'
+    - else
+      = link_to icon('fa-regular', 'star'), [:pin, @database.become, @database_schema], data: { 'turbo-method': :post }, class: 'fs-3 text-secondary'
   - else
-    = link_to icon('fa-regular', 'star'), pin_database_database_schema_path(@database, @database_schema), data: { 'turbo-method': :post }, class: 'fs-3 text-secondary'
+    - if @database_schema.pin_at
+      = icon('fa-solid', 'star', class: 'fs-3 text-warning')
+    - else
+      = icon('fa-regular', 'star', class: 'fs-3 text-secondary')
+
   = link_to @database.name, database_path(@database)
   | /
   = @database_schema.name
