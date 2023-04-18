@@ -24,4 +24,12 @@ class DatabaseSchemaPolicy < ApplicationPolicy
   def export_hive?
     @user.admin?
   end
+
+  def pin?
+    @user.admin?
+  end
+
+  def unpin?
+    pin?
+  end
 end
