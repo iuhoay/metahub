@@ -1,0 +1,4 @@
+ul.nav.nav-underline.justify-content-end.mb-2
+  - [{tab: "columns", name: "Columns"}, {tab: "ddl", name: "DDL"}, {tab: "datax", name: "DataX"}].each do |tab|
+    li.nav-item
+      = link_to tab[:name], [@database.become, @database_schema, @database_table, tab: tab[:tab]], class: "nav-link #{'active' if tab[:tab] == current_tab}"

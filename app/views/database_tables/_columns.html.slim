@@ -1,0 +1,27 @@
+table.table
+  thread
+    tr
+      th Position
+      th Field
+      th Type
+      th Null
+      th Key
+      th Default
+      th Comment
+      th.text-end= sort_link(@q, :updated_at, 'Latest Update', default_order: :desc)
+  tbody
+    - @table_fields.each do |field|
+      tr
+        td= field.position
+          // TODO: Modify position
+          // edit position
+          // = simple_form_for [@database, @database_schema, @database_table, field] do |f|
+          //   = f.input :position, as: :string
+          //   = f.submit
+        td.text-break= field.field
+        td= field.data_type
+        td= field.nullable
+        td= field.key
+        td= field.default_value
+        td= field.comment
+        td.text-end= field.updated_at
