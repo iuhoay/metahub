@@ -1,6 +1,15 @@
 class Database::Mysql < Database
   def get_connection(database = nil)
-    Mysql2::Client.new(host: host, port: port, username: username, password: password, database: database)
+    Mysql2::Client.new(
+      host: host,
+      port: port,
+      username: username,
+      password: password,
+      database: database,
+      connect_timeout: 5
+    )
+  rescue Mysql2::Error::ConnectionError => e
+    raise DatabaseConnectionError, e.message
   end
 
   def url
