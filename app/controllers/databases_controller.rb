@@ -1,5 +1,6 @@
 class DatabasesController < ApplicationController
   before_action :set_database, only: [:show, :edit, :update, :destroy, :sync_schemas]
+  before_action :set_breadcrumbs
 
   def index
     authorize Database
@@ -9,6 +10,8 @@ class DatabasesController < ApplicationController
   def new
     authorize Database
     @database = Database.new
+
+    add_breadcrumb "New"
   end
 
   def create
@@ -22,6 +25,7 @@ class DatabasesController < ApplicationController
   end
 
   def edit
+    add_breadcrumb "Edit"
   end
 
   def update
@@ -50,5 +54,10 @@ class DatabasesController < ApplicationController
   def set_database
     @database = Database.find(params[:id])
     authorize @database.become
+  end
+
+  def set_breadcrumbs
+    add_breadcrumb "All Databases", databases_path
+    add_breadcrumb @database.name, database_path(@database) if @database
   end
 end

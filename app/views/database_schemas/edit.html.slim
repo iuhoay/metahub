@@ -1,5 +1,3 @@
-= content_for :page_title, @database_schema.name
-
 = simple_form_for [@database.become, @database_schema] do |f|
   .mb-2
     = f.input :name, readonly: true

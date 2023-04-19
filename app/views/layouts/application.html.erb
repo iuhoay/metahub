@@ -14,9 +14,7 @@
     <%= render "layouts/navbar" %>
     <div id="wrapper" class="container">
       <%= render "layouts/flash" %>
-      <% if yield(:page_title).present? || yield(:page_actions).present? %>
-        <%= render "layouts/page_header" %>
-      <% end %>
+      <%= render "layouts/page_header" %>
       <%= yield %>
     </div>
   </body>

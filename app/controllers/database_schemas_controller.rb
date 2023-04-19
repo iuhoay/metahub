@@ -1,5 +1,6 @@
 class DatabaseSchemasController < ApplicationController
   before_action :set_database_schema, only: [:show, :edit, :update, :destroy, :sync_tables, :pin, :unpin, :export_hive]
+  before_action :set_breadcrumbs, except: [:index]
 
   def index
     authorize DatabaseSchema
@@ -32,6 +33,10 @@ class DatabaseSchemasController < ApplicationController
     redirect_to database_database_schema_url(@database, @database_schema), notice: "SQL files was successfully created."
   end
 
+  def edit
+    add_breadcrumb "Edit"
+  end
+
   def update
     if @database_schema.update(database_schema_params)
       redirect_to database_database_schema_url(@database, @database_schema), notice: "Database schema was successfully updated."
@@ -50,5 +55,11 @@ class DatabaseSchemasController < ApplicationController
 
   def database_schema_params
     params.require(:database_schema).permit(:alias_name, :hive_table_prefix, :comment_name)
+  end
+
+  def set_breadcrumbs
+    add_breadcrumb "Home", root_url
+    add_breadcrumb @database.name, database_path(@database) if @database
+    add_breadcrumb @database_schema.name, database_database_schema_path(@database, @database_schema) if @database_schema
   end
 end
