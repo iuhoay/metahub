@@ -1,6 +1,8 @@
 = content_for :page_actions do
+  - if policy(@database.become).update?
+    = link_to "Edit", [:edit, @database.become]
   - if policy(@database.become).sync_schemas?
-    = link_to 'Sync', [:sync_schemas, @database.become], data: { 'turbo-method': :post, "turbo-disable-with": "Loading..." }, class: 'btn btn-link'
+    = link_to 'Sync', [:sync_schemas, @database.become], data: { 'turbo-method': :post }
 
 table.table
   thead

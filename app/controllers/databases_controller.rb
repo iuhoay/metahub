@@ -29,6 +29,9 @@ class DatabasesController < ApplicationController
   end
 
   def update
+    if database_params[:password].blank?
+      database_params.delete(:password)
+    end
     if @database.update(database_params)
       redirect_to databases_path
     else
