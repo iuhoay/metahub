@@ -1,6 +1,8 @@
 class TableField < ApplicationRecord
   belongs_to :database_table
 
+  delegate :database_schema, to: :database_table
+
   acts_as_list scope: :database_table
 
   DATA_TYPE_REGEX = /(?<type>\w+)\(?(?<length>\d+)?,?((?<scale>\d+))?/
@@ -15,7 +17,10 @@ class TableField < ApplicationRecord
   end
 
   def to_hive_column_name
-    ActiveSupport::Inflector.underscore(field)
+    if database_schema.column_name_style_snake_case?
+      return ActiveSupport::Inflector.underscore(field)
+    end
+    field.downcase
   end
 
   def get_hive_type

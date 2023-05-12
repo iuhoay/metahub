@@ -1,6 +1,8 @@
 class DatabaseSchema < ApplicationRecord
   belongs_to :database, class_name: "Database", foreign_key: "connect_database_id"
-  has_many :tables, class_name: "DatabaseTable", foreign_key: "database_schema_id"
+  has_many :tables, class_name: "DatabaseTable", foreign_key: "database_schema_id", dependent: :destroy
+
+  enum column_name_style: %w[normal snake_case], _prefix: true
 
   validates :name, presence: true
 
