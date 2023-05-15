@@ -2,8 +2,6 @@
   - if policy(@database_table).update?
     = link_to 'Sync', [:sync_fields, @database.become, @database_schema, @database_table], data: { 'turbo-method': :post, 'turbo-disable_with': 'loading...' }, class: 'btn btn-link btn-warning'
 
-- tab = params[:tab] || "columns"
+= render "nav"
 
-= render "nav", current_tab: tab
-
-= render tab
+= render @current_tab

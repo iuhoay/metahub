@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_12_013418) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_15_012346) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -48,6 +48,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_12_013418) do
     t.string "comment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "sync_method", default: 0
     t.index ["database_schema_id"], name: "index_database_tables_on_database_schema_id"
   end
 

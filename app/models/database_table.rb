@@ -2,6 +2,10 @@ class DatabaseTable < ApplicationRecord
   belongs_to :database_schema, counter_cache: true, touch: true
   has_many :table_fields, -> { order(position: :asc) }, dependent: :destroy
 
+  enum sync_method: %i[all_dd add_dd], _prefix: "sync"
+
+  validates :sync_method, presence: true
+
   delegate :database, to: :database_schema
 
   def self.ransackable_attributes(auth_object = nil)
@@ -75,7 +79,11 @@ class DatabaseTable < ApplicationRecord
   end
 
   def ddl
-    create_hive_table_init_script
+    if sync_all_dd?
+      create_hive_table_init_script
+    elsif sync_add_dd?
+      create_hive_add_dd_table_script
+    end
   end
 
   def datax
