@@ -1,0 +1,6 @@
+= render "nav"
+
+= simple_form_for [@database.become, @database_schema, @database_table] do |f|
+  = f.input :sync_method, as: :radio_buttons, collection: DatabaseTable.sync_methods.keys, label: "Sync Method"
+  .actions.mt-2
+    = f.submit "Save", class: "btn btn-primary"
