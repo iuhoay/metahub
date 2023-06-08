@@ -1,14 +1,14 @@
 = content_for :page_actions do
   - if policy(@database_schema).pin?
     - if @database_schema.pin_at
-      = link_to icon('fa-solid', 'star'), [:unpin, @database.become, @database_schema], data: { 'turbo-method': :delete }, class: 'text-warning'
+      = link_to icon('star-fill'), [:unpin, @database.become, @database_schema], data: { 'turbo-method': :delete }, class: 'text-warning'
     - else
-      = link_to icon('fa-regular', 'star'), [:pin, @database.become, @database_schema], data: { 'turbo-method': :post }, class: 'text-secondary'
+      = link_to icon('star'), [:pin, @database.become, @database_schema], data: { 'turbo-method': :post }, class: 'text-secondary'
   - else
     - if @database_schema.pin_at
-      = icon('fa-solid', 'star', class: 'text-warning')
+      = icon('star-fill', class: 'text-warning')
     - else
-      = icon('fa-regular', 'star', class: 'text-secondary')
+      = icon('star-fill', class: 'text-secondary')
 
   - if policy(@database_schema).update?
     = link_to 'Edit', edit_database_database_schema_path(@database, @database_schema)

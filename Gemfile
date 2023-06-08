@@ -77,12 +77,9 @@ end
 gem "mysql2", "~> 0.5"
 gem "click_house"
 
-gem "bootstrap", "~> 5.3.0.alpha3"
-gem "jquery-rails"
 gem "simple_form"
 gem "slim-rails"
 gem "good_job", "~> 3.4"
-gem "font-awesome-sass", "~> 6.2.0"
 
 gem "acts_as_list", "~> 1.1"
 
@@ -94,3 +91,5 @@ gem "sentry-rails"
 gem "devise", "~> 4.9"
 
 gem "pundit", "~> 2.3"
+
+gem "cssbundling-rails", "~> 1.1"
