@@ -25,5 +25,7 @@ Rails.application.routes.draw do
     end
   end
 
+  resource :up, only: [:show], controller: :up
+
   mount GoodJob::Engine => "/good_job" if Rails.env.development?
 end
