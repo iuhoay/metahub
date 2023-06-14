@@ -27,5 +27,7 @@ Rails.application.routes.draw do
 
   resource :up, only: [:show], controller: :up
 
-  mount GoodJob::Engine => "/good_job" if Rails.env.development?
+  authenticate :user, ->(user) { user.admin? } do
+    mount GoodJob::Engine => "/good_job"
+  end
 end
