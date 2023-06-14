@@ -18,7 +18,7 @@ module ApplicationHelper
     return unless user_signed_in?
 
     if current_user.admin?
-      content_tag(:span, class: "d-flex align-items-center justify-content-center gap-1") do
+      content_tag(:span, class: "d-inline-flex align-items-center justify-content-center gap-1") do
         [content_tag(:i, "", class: "bi bi-asterisk text-warning"), current_user.name].join.html_safe
       end
     else
