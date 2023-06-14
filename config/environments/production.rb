@@ -22,7 +22,7 @@ Rails.application.configure do
 
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
-  config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present?
+  config.public_file_server.enabled = true
 
   # Compress CSS using a preprocessor.
   # config.assets.css_compressor = :sass
@@ -61,6 +61,13 @@ Rails.application.configure do
   # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "metahub_production"
+  config.active_job.queue_adapter = :good_job
+  config.good_job = {
+    execution_mode: :async,
+    max_threads: 4,
+    poll_interval: 30,
+  }
+
 
   config.action_mailer.perform_caching = false
 
