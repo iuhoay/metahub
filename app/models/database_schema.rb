@@ -2,9 +2,10 @@ class DatabaseSchema < ApplicationRecord
   belongs_to :database, class_name: "Database", foreign_key: "connect_database_id"
   has_many :tables, class_name: "DatabaseTable", foreign_key: "database_schema_id", dependent: :destroy
 
-  enum column_name_style: %w[normal snake_case], _prefix: true
+  enum column_name_style: %w[lowercase snake_case], _prefix: true, _default: :snake_case
 
   validates :name, presence: true
+  validates :column_name_style, presence: true
 
   scope :pinned, -> { where.not(pin_at: nil) }
 
