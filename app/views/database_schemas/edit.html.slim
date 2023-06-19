@@ -8,5 +8,7 @@
   .mb-2
     = f.input :comment_name
   .mb-2
+    = f.input :column_name_style, collection: DatabaseSchema.column_name_styles.keys
+  .mb-2
     = f.submit "Save", class: "btn btn-primary"
     = link_to 'Back', [@database.become, @database_schema], class: 'btn btn-secondary ms-2'

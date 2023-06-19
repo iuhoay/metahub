@@ -54,7 +54,7 @@ class DatabaseSchemasController < ApplicationController
   end
 
   def database_schema_params
-    params.require(:database_schema).permit(:alias_name, :hive_table_prefix, :comment_name)
+    params.require(:database_schema).permit(:alias_name, :hive_table_prefix, :comment_name, :column_name_style)
   end
 
   def set_breadcrumbs
