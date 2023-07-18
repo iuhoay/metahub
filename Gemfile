@@ -96,3 +96,5 @@ gem "devise", "~> 4.9"
 gem "pundit", "~> 2.3"
 
 gem "cssbundling-rails", "~> 1.1"
+
+gem "lograge", "~> 0.12.0"
