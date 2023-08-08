@@ -66,7 +66,7 @@ group :development do
 
   gem "standard"
   gem "standard-rails"
-  gem "mrsk", "~> 0.13.2"
+  gem "mrsk", "~> 0.14.0"
 end
 
 group :test do
