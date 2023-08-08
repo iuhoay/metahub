@@ -36,5 +36,7 @@ jobs:
           bundler-cache: true
       - name: Set up database schema
         run: bin/rails db:schema:load
+      - name: Build css
+        run: bin/rails css:build
       - name: Run tests
         run: bin/rails test
