@@ -9,7 +9,9 @@ FROM ruby:$RUBY_VERSION-slim-bullseye as base
 WORKDIR /rails
 
 # Set production environment
-ENV RAILS_ENV="production" \ BUNDLE_DEPLOYMENT="1" \ BUNDLE_PATH="/usr/local/bundle" \
+ENV RAILS_ENV="production" \
+    BUNDLE_DEPLOYMENT="1" \
+    BUNDLE_PATH="/usr/local/bundle" \
     BUNDLE_WITHOUT="development"
 
 # Configure apt to use ustc mirrors
